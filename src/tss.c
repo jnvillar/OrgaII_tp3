@@ -7,6 +7,7 @@
 
 #include "tss.h"
 #include "mmu.h"
+int printf(const char *fmt, ...);
 
 
 
@@ -48,8 +49,7 @@ void tss_inicializar() {
 
 void tss_completar(int jugador, int perro, perro_t *rrope){
 	uint espCero = mmu_proxima_pagina_fisica_libre();
-	int posicion = perro - 1; //perro es la posicion en el arreglo de tareas, le tengo q restar uno porque esta la iddle
-
+	int posicion = perro;
 	if (jugador == 0 ){		
 	    tss_jugadorA[posicion].cs = 0x5B;
 	    tss_jugadorA[posicion].es = 0x53;
@@ -74,12 +74,11 @@ void tss_completar(int jugador, int perro, perro_t *rrope){
 		tss_jugadorA[posicion].cr3 = nuevoCr3;
 
 
-		gdt[14+posicion].base_0_15 =   (uint )&tss_jugadorA[posicion] & 0x0000FFFF;
-		gdt[14+posicion].base_23_16 = ((uint )&tss_jugadorA[posicion] & 0x00FF0000) >> 16;
-		gdt[14+posicion].base_31_24 = ((uint )&tss_jugadorA[posicion] & 0xFF000000) >> 24;
+		gdt[rrope->id].base_0_15 =   (uint )&tss_jugadorA[posicion] & 0x0000FFFF;
+		gdt[rrope->id].base_23_16 = ((uint )&tss_jugadorA[posicion] & 0x00FF0000) >> 16;
+		gdt[rrope->id].base_31_24 = ((uint )&tss_jugadorA[posicion] & 0xFF000000) >> 24;
 
 	} else {
-		posicion = posicion -8; // -8 por los perros del otro jugador
 	    tss_jugadorB[posicion].cs = 0x5B;
 	    tss_jugadorB[posicion].es = 0x53;
 	    tss_jugadorB[posicion].gs = 0x53;
@@ -103,8 +102,8 @@ void tss_completar(int jugador, int perro, perro_t *rrope){
 		uint nuevoCr3 = mmu_inicializar_memoria_perro(rrope, jugador, perro);
 		
 		tss_jugadorB[posicion].cr3 = nuevoCr3;
-		gdt[22+posicion].base_0_15 =   (uint )&tss_jugadorB[posicion] & 0x0000FFFF;
-		gdt[22+posicion].base_23_16 = ((uint )&tss_jugadorB[posicion] & 0x00FF0000) >> 16;
-		gdt[22+posicion].base_31_24 = ((uint )&tss_jugadorB[posicion] & 0xFF000000) >> 24;
+		gdt[rrope->id].base_0_15 =   (uint )&tss_jugadorB[posicion] & 0x0000FFFF;
+		gdt[rrope->id].base_23_16 = ((uint )&tss_jugadorB[posicion] & 0x00FF0000) >> 16;
+		gdt[rrope->id].base_31_24 = ((uint )&tss_jugadorB[posicion] & 0xFF000000) >> 24;
 	}
 }

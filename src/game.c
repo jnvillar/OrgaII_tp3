@@ -110,15 +110,6 @@ void game_terminar_si_es_hora()
 	}
 
 }
-/*
-void game_atender_tick(perro_t *perro){
-
-	game_terminar_si_es_hora();
-	
-
-}
-
-*/
 
 
 

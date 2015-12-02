@@ -36,6 +36,11 @@ if(syscall == 1){
 // ~~~ recibe el perro que está corriendo actualmente
 void game_atender_tick(perro_t *perro)
 {
+	if (perro != NULL){
+		game_perro_ver_si_en_cucha(perro);
+
+	}
+
 	game_terminar_si_es_hora();
 	
 }

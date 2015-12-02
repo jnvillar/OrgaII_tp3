@@ -39,7 +39,10 @@ void task(int x_origen, int y_origen) {
 
 	ir_hacia_desde(x_origen, y_origen, x_actual, y_actual);
 
-    while(1) { __asm __volatile("mov $2, %%eax":::"eax"); }
+    while(1) {
+    	breakpoint();
+     __asm __volatile("mov $2, %%eax":::"eax"); 
+ }
 }
 
 void actualizar(int *x, int *y, int direccion)
