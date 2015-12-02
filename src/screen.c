@@ -70,10 +70,11 @@ void imprim(char letra){
     }
     if (letra == 0x10){
         print("q",0,0,3);
-        
-        indexPerros = sched_buscar_tarea_libre(0);
 
-        game_perro_reciclar_y_lanzar(&jugadorA.perros[indexPerros-1], 0);
+        indexPerros = sched_buscar_tarea_libre(0);        
+        if (indexPerros != 0){
+            game_perro_reciclar_y_lanzar(&jugadorA.perros[indexPerros-1], 0);
+        }
        
 
 
@@ -83,19 +84,25 @@ void imprim(char letra){
         
         print("e",0,0,3);
         indexPerros = sched_buscar_tarea_libre(0);       
-        game_perro_reciclar_y_lanzar(&jugadorA.perros[indexPerros-1], 1);
+        if (indexPerros != 0){
+            game_perro_reciclar_y_lanzar(&jugadorA.perros[indexPerros-1], 1);
+        }
         
     }
     if (letra == 0x16){
         print("u",0,0,3);
-        indexPerros = sched_buscar_tarea_libre(1);    
-        game_perro_reciclar_y_lanzar(&jugadorB.perros[indexPerros-9], 0);
+        indexPerros = sched_buscar_tarea_libre(1);
+        if (indexPerros != 0){
+            game_perro_reciclar_y_lanzar(&jugadorB.perros[indexPerros-9], 0);
+        } 
 
     }
     if (letra == 0x18){
         print("o",0,0,3);
         indexPerros = sched_buscar_tarea_libre(1);       
-        game_perro_reciclar_y_lanzar(&jugadorB.perros[indexPerros-9], 1);
+        if (indexPerros != 0){
+            game_perro_reciclar_y_lanzar(&jugadorB.perros[indexPerros-9], 1);
+        }
     }
     if (letra == 0x2c){
         print("z",0,0,3);

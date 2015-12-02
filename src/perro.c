@@ -5,6 +5,8 @@
 #include "tss.h"
 
 int printf(const char *fmt, ...);
+extern ticks_actuales;
+extern ticks_maximos;
 
 // realiza inicialización básica de un perro. El perro aun no está vivo ni por lanzarse. Setea jugador, indice, etc
 void game_perro_inicializar(perro_t *perro, jugador_t *j, uint index, uint id)
@@ -98,7 +100,7 @@ uint game_perro_mover(perro_t *perro, direccion dir)
    	} else {
    		perro->x = nuevo_x;
 		perro->y = nuevo_y;		
-		if((nuevo_x>79 || nuevo_y>49) || (nuevo_x == perro->jugador->x_cucha && nuevo_y == perro->jugador->y_cucha)){
+		if(nuevo_x>79 || nuevo_y>49){
 			game_perro_termino(perro);
 		} else {
 			mmu_mover_perro(perro, viejo_x, viejo_y);		
@@ -115,19 +117,22 @@ uint game_perro_mover(perro_t *perro, direccion dir)
 // *** viene del syscall cavar ***
 uint game_perro_cavar(perro_t *perro)
 {
-
 	int x = perro->x;
 	int y = perro->y;
 	int i = 0;
 	while (i<ESCONDITES_CANTIDAD){
 		if (escondites[i][0] == x && escondites[i][1] == y){
-			if (escondites[i][2] != 0){
-				perro->huesos++;
-				escondites[i][2]--;
-			}
+			while (perro->huesos < 10){
+				if (escondites[i][2] != 0){
+					perro->huesos++;
+					escondites[i][2]--;
+					ticks_actuales = ticks_maximos;
+				}
+			}			
 		}
 		i++;
-	}	
+	}
+
 	return 0;
 }
 

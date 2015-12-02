@@ -100,14 +100,16 @@ void sched_remover_tarea(unsigned int gdt_index)
 	}
 	if (scheduler.tasks[scheduler.current].gdt_index == gdt_index){
 		scheduler.current = 0;
-		//sched_saltar_idle();
+		__asm __volatile(        
+        "int $0x46     \n"       
+    );
 	}
 }
-/*
-sched_saltar_idle(){
 
+void sched_saltar_idle(){
+	scheduler.current = 0;
 }
-*/
+
 
 uint sched_proxima_a_ejecutar()
 {

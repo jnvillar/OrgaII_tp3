@@ -31,6 +31,7 @@ extern game_atender_tick
 extern sched_atender_tick
 extern sched_proxima_a_ejecutar
 extern game_syscall_manejar
+extern sched_saltar_idle
 
 ;;
 ;; Definición de MACROS
@@ -182,24 +183,53 @@ _isr33:
 ;; Rutinas de atención de las SYSCALLS
 ;;----------------------------------------------------------------------- ;;
 
+;global _isr70
+;_isr70:
+;    pushad
+;    push ecx
+;    push eax
+;	call game_syscall_manejar
+;	add esp, 4
+;	add esp, 4
+;
+;    mov [guardar], eax
+;
+ ;   popad
+;
+ ;   mov eax, [guardar]
+;
+ ;   
+ ;   jmp 0x68:0          ; CORREGIR ESTO
+;
+ ;   iret
+
+
 global _isr70
 _isr70:
     pushad
+    push eax
+    push ecx
+    call sched_tarea_actual
+    cmp eax, 0
+    je .saltarIdle
+    pop ecx
+    pop eax
+
     push ecx
     push eax
-	call game_syscall_manejar
-	add esp, 4
-	add esp, 4
+    call game_syscall_manejar
+    add esp, 4
+    add esp, 4
 
     mov [guardar], eax
 
-    popad
+   popad
 
-    mov eax, [guardar]
+   mov eax, [guardar]
+   call sched_saltar_idle
+   .saltarIdle:
+        jmp 0x68:0          
 
-    jmp 0x68:0          ; CORREGIR ESTO
-
-    iret
-
+   iret
 
 

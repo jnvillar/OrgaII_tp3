@@ -54,6 +54,8 @@ perro_t* sched_tarea_actual();
 // para pasar a la siguiente tarea (devuelve su indice en la gdt)
 ushort sched_atender_tick();
 
+void sched_saltar_idle();
+
 uint sched_buscar_gdt_tarea(perro_t *perro);
 
 int sched_buscar_tarea_libre(uint jugador);
