@@ -1,0 +1,50 @@
+\select@language {spanish}
+\contentsline {subsection}{\numberline {0.1}Introduccion}{3}
+\contentsline {section}{\numberline {1}Ejercicio 1:}{4}
+\contentsline {subsection}{\numberline {1.1}Introducci\IeC {\'o}n:}{4}
+\contentsline {subsection}{\numberline {1.2}\IeC {\'I}tem a): Setear la \textit {GDT}}{4}
+\contentsline {subsection}{\numberline {1.3}\IeC {\'I}tem b): Pasar a modo protegido y setear la pila}{6}
+\contentsline {subsection}{\numberline {1.4}\IeC {\'I}tem c): Agregar a la \textit {GDT} un segmento adicional y utilizarlo como memoria de v\IeC {\'\i }deo}{7}
+\contentsline {subsection}{\numberline {1.5}\IeC {\'I}tem d): Limpiar la pantalla y pintar el \IeC {\'a}rea del mapa}{8}
+\contentsline {section}{\numberline {2}Ejercicio 2:}{10}
+\contentsline {subsection}{\numberline {2.1}Introducci\IeC {\'o}n:}{10}
+\contentsline {subsection}{\numberline {2.2}\IeC {\'I}tem a): Setear la \textit {IDT}}{10}
+\contentsline {subsubsection}{\numberline {2.2.1}{\relax \fontsize {12}{14}\selectfont \textit {Idt.c:}}}{10}
+\contentsline {subsubsection}{\numberline {2.2.2}{\relax \fontsize {12}{14}\selectfont \textit {Isr.h:}}}{11}
+\contentsline {subsubsection}{\numberline {2.2.3}{\relax \fontsize {12}{14}\selectfont \textit {Isr.asm:}}}{12}
+\contentsline {subsection}{\numberline {2.3}\IeC {\'I}tem b): Cargar y probar \textit {IDT}}{13}
+\contentsline {section}{\numberline {3}Ejercicio 3:}{14}
+\contentsline {subsection}{\numberline {3.1}Introducci\IeC {\'o}n:}{14}
+\contentsline {subsection}{\numberline {3.2}\IeC {\'I}tem a): Limpiar el buffer de video y pintar el mapa \textit {IDT}}{14}
+\contentsline {subsection}{\numberline {3.3}\IeC {\'I}tem b): Completar la funci\IeC {\'o}n \textit {mmu\_mapear\_p\IeC {\'a}gina(unsigned int virtual, unsigned int cr3, unsigned int f\IeC {\'\i }sica)}}{14}
+\contentsline {subsection}{\numberline {3.4}\IeC {\'I}tem c): Inicializar el directorio de p\IeC {\'a}ginas en 0x00027000 y mapear las direcciones desde la 0 hasta la 0x003FFFFF con Identity Mapping\textit {IDT}}{18}
+\contentsline {subsection}{\numberline {3.5}\IeC {\'I}tem d): Activar la paginaci\IeC {\'o}n y verificar que el sistema sigue funcionando imprimiendo el nombre del grupo.}{18}
+\contentsline {subsection}{\numberline {3.6}\IeC {\'I}tem e): Completar la funci\IeC {\'o}n \textit {mmu\_unmapear\_pagina(unsigned int virtual, unsigned int cr3)}}{19}
+\contentsline {subsection}{\numberline {3.7}\IeC {\'I}tem f): Probar la funci\IeC {\'o}n anterior desmapeando la \IeC {\'u}ltima p\IeC {\'a}gina del kernel (0x3FF000).}{20}
+\contentsline {section}{\numberline {4}Ejercicio 4:}{22}
+\contentsline {subsection}{\numberline {4.1}Introducci\IeC {\'o}n:}{22}
+\contentsline {subsection}{\numberline {4.2}\IeC {\'I}tem a): Completar \textit {inicializar\_mmu}.}{22}
+\contentsline {subsection}{\numberline {4.3}\IeC {\'I}tem b): Completar la funci\IeC {\'o}n \textit {mmu\_inicializar\_memoria\_perro}.}{22}
+\contentsline {section}{\numberline {5}Ejercicio 5:}{24}
+\contentsline {subsection}{\numberline {5.1}Introducci\IeC {\'o}n:}{24}
+\contentsline {subsection}{\numberline {5.2}\IeC {\'I}tem a): Completar la \textit {IDT}}{24}
+\contentsline {subsection}{\numberline {5.3}\IeC {\'I}tem b): Rutina del reloj}{24}
+\contentsline {subsection}{\numberline {5.4}\IeC {\'I}tem c): Rutina del teclado}{25}
+\contentsline {subsection}{\numberline {5.5}\IeC {\'I}tem d): Rutina 0x46}{25}
+\contentsline {section}{\numberline {6}Ejercicio 6:}{26}
+\contentsline {subsection}{\numberline {6.1}Introducci\IeC {\'o}n:}{26}
+\contentsline {subsection}{\numberline {6.2}Item a)}{26}
+\contentsline {subsection}{\numberline {6.3}Item b)}{26}
+\contentsline {subsection}{\numberline {6.4}item c)}{27}
+\contentsline {subsection}{\numberline {6.5}item d)}{27}
+\contentsline {subsection}{\numberline {6.6}item e)}{28}
+\contentsline {subsection}{\numberline {6.7}item f)}{28}
+\contentsline {subsection}{\numberline {6.8}item g)}{28}
+\contentsline {subsection}{\numberline {6.9}item h)}{29}
+\contentsline {section}{\numberline {7}Ejercicio 7:}{30}
+\contentsline {subsection}{\numberline {7.1}Introducci\IeC {\'o}n:}{30}
+\contentsline {subsection}{\numberline {7.2}\IeC {\'I}tem a): Inicializar el \textit {scheduler}}{30}
+\contentsline {subsection}{\numberline {7.3}\IeC {\'I}tem b): Crear la funci\IeC {\'o}n \textit {sched\_proxima\_a\_ejecutar()}}{31}
+\contentsline {subsection}{\numberline {7.4}\IeC {\'I}tem c): Crear una funci\IeC {\'o}n \textit {sched\_atender\_tick()}}{31}
+\contentsline {subsection}{\numberline {7.5}\IeC {\'I}tem d): Atender la interrupcion 0x46}{32}
+\contentsline {subsection}{\numberline {7.6}\IeC {\'I}tem e): Realiza el intercabio e tareas}{32}

@@ -1,0 +1,35 @@
+\subsection{Introducción:}
+
+En este ejercicio vamos a realizar la Tabla de Descriptores Globales (GDT). Se que realizemos lo siguiente :
+
+\begin{itemize}
+\item [\textit{a):}] Que la tabla gdt tenga 4 segmentos, dos para código de
+nivel 0 y 3; y otros dos para datos de nivel 0 y 3. Estos segmentos deben direccionar los primeros 500MB de memoria. Por último se pide no usar las primeras siete posiciones de la gdt, ya que se consideran utilizadas.
+
+\item [\textit{b):}] Pasar a modo protegido y setear la pila del kernel en la direccion 0x27000. 
+
+\item [\textit{c):}] Agregar a la gdt un segmento adicional y escribir una rutina qe utilice este nuevo segmento para pintar la esquina superior izquierda de la pantalla.
+
+\item [\textit{d):}] Limpiar la pantalla y pintar el área del mapa (sugerido el color gris) junto con las barras inferiores para los jugadores.
+\end{itemize}
+
+\subsection{Ítem a:}
+
+Para este item completamos el archivo
+
+\begin{figure}[H]
+\begin{center}
+
+\minipage{0.6\textwidth}
+  \includegraphics[width=\linewidth]{ejercicio1/GDTdatos0.png}
+  \caption{{\small Imagen 1}} 
+\endminipage
+\minipage{0.6\textwidth}
+  \includegraphics[width=\linewidth]{ejercicio1/GDTcodigo0.png}
+  \caption{{\small Imagen 2}} 
+\endminipage
+
+\end{center}
+\end{figure}
+
+
