@@ -36,10 +36,8 @@ if(syscall == 1){
 // ~~~ recibe el perro que está corriendo actualmente
 void game_atender_tick(perro_t *perro)
 {
-	if (perro != NULL){
-		
+	if (perro != NULL){		
 		game_perro_ver_si_en_cucha(perro);
-
 	}
 
 	game_terminar_si_es_hora();
@@ -83,16 +81,11 @@ void game_atender_teclado(unsigned char tecla)
 	{
 		// ~~~ completar ~~~
 		case KB_q: game_jugador_lanzar_perro(&jugadorA, TIPO_1, 0, 0); break;
-
 		case KB_a: game_jugador_moverse(&jugadorA, -1,  0); break;
-
-
 		case KB_k: game_jugador_moverse(&jugadorB,  0, -1); break;
-
 		case KB_z: game_jugador_dar_orden(&jugadorA, 0); break;
 		case KB_x: game_jugador_dar_orden(&jugadorA, 1); break;
 		case KB_c: game_jugador_dar_orden(&jugadorA, 2); break;
-
 		case KB_b: game_jugador_dar_orden(&jugadorB, 0); break;
 		case KB_n: game_jugador_dar_orden(&jugadorB, 1); break;
 		case KB_m: game_jugador_dar_orden(&jugadorB, 2); break;

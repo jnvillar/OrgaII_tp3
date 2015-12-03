@@ -15,8 +15,8 @@ int ticks_maximos = 5000;
 int ticks_actuales = 5000;
 
 int escondites[ESCONDITES_CANTIDAD][3] = { // TRIPLAS DE LA FORMA (X, Y, HUESOS)
-                                        {76,  25, 50}, {12, 15, 50}, {9, 10, 100}, {47, 21, 100} ,
-                                        {34,  11, 50}, {75, 38, 50}, {40, 21, 100}, {72, 17, 100}
+                                        {76,  25, 5}, {12, 15, 5}, {9, 10, 5}, {47, 21, 5} ,
+                                        {34,  11, 5}, {75, 38, 5}, {40, 21, 5}, {72, 17, 5}
                                     };
 
 jugador_t jugadorA;

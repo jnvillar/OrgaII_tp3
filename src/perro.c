@@ -81,7 +81,6 @@ uint game_dir2xy(/* in */ direccion dir, /* out */ int *x, /* out */ int *y)
 uint game_perro_mover(perro_t *perro, direccion dir)
 {	
 
-   	//breakpoint();
 
 	int x, y;
 	uint res = game_dir2xy(dir, &x, &y);
@@ -104,7 +103,7 @@ uint game_perro_mover(perro_t *perro, direccion dir)
 		if(nuevo_x>79 || nuevo_y>43 || nuevo_x<0 || nuevo_y < 0 ){
 			game_perro_termino(perro);
 		} else {
-			mmu_mover_perro(perro, viejo_x, viejo_y);		
+			mmu_mover_perro(perro, viejo_x, viejo_y);
 			screen_actualizar_posicion_mapa(perro->x, perro->y);
 		}
     }
@@ -129,6 +128,9 @@ uint game_perro_cavar(perro_t *perro)
 					perro->huesos++;
 					escondites[i][2]--;
 					ticks_actuales = ticks_maximos;
+
+				} else {
+					break;
 				}
 			}			
 		}

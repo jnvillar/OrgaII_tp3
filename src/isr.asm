@@ -223,13 +223,13 @@ _isr70:
 
     mov [guardar], eax
 
-   popad
+    popad
 
-   mov eax, [guardar]
-   call sched_saltar_idle
-   .saltarIdle:
+    mov eax, [guardar]
+    call sched_saltar_idle
+    .saltarIdle:
         jmp 0x68:0          
 
-   iret
+    iret
 
 
