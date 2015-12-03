@@ -119,42 +119,6 @@ void sched_saltar_idle(){
 	scheduler.current = 0;
 }
 
-/*
-uint sched_proxima_a_ejecutar()
-{
-	int i = scheduler.current;
-	int j = 0;
-	if (scheduler.tasks[scheduler.current].perro != NULL){
-		uint jugador = scheduler.tasks[scheduler.current].perro->jugador->index;
-		while(j<=MAX_CANT_TAREAS_VIVAS){
-			if(scheduler.tasks[i%(MAX_CANT_TAREAS_VIVAS+1)].perro != NULL && scheduler.tasks[i%(MAX_CANT_TAREAS_VIVAS+1)].perro->jugador-> index != jugador ){
-				return i%(MAX_CANT_TAREAS_VIVAS+1);
-			}
-			j++;
-			i++;
-		}  
-		j = 0;
-		i = (scheduler.current+1)%(MAX_CANT_TAREAS_VIVAS+1);
-		while(j<=MAX_CANT_TAREAS_VIVAS){
-			if(scheduler.tasks[i%(MAX_CANT_TAREAS_VIVAS+1)].perro != NULL){
-				return i%(MAX_CANT_TAREAS_VIVAS+1);
-			}
-			j++;
-			i++;
-		} 
-	} else {
-		while(j<=MAX_CANT_TAREAS_VIVAS){
-			if(scheduler.tasks[i%(MAX_CANT_TAREAS_VIVAS+1)].perro != NULL){
-				return i%(MAX_CANT_TAREAS_VIVAS+1);
-			}
-			j++;
-			i++;
-		} 
-	}
-	return 0;   
-	
-}
-*/
 
 
 uint sched_proxima_a_ejecutar()
@@ -183,7 +147,7 @@ uint sched_proxima_a_ejecutar()
 		if (scheduler.ultimojugador == 0){
 			while (j<=7){
 				if (scheduler.tasks[((scheduler.ultimoperroB+j+1)%8)+9].perro != NULL){
-					breakpoint();
+					//breakpoint();
 					return ((scheduler.ultimoperroB+j+1)%8)+9;
 				}
 				j++;
@@ -250,10 +214,10 @@ ushort sched_atender_tick()
        	return scheduler.tasks[scheduler.current].gdt_index;    	
     }else{   
 
-    	if (sched_tarea_actual() != NULL && scheduler.tasks[prox].perro->jugador->index == 0){
+    	if (scheduler.tasks[prox].perro != NULL && scheduler.tasks[prox].perro->jugador->index == 0){
 			scheduler.ultimoperroA = prox -1;
 			scheduler.ultimojugador = 0;
-		} else if (sched_tarea_actual() != NULL && scheduler.tasks[prox].perro->jugador->index == 1){
+		} else if (scheduler.tasks[prox].perro != NULL && scheduler.tasks[prox].perro->jugador->index == 1){
 			scheduler.ultimoperroB = prox-9;
 			scheduler.ultimojugador = 1;
 		}
