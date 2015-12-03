@@ -7,6 +7,8 @@ definicion de funciones del scheduler
 
 #include "screen.h"
 #include "game.h"
+#include "tss.h"
+
 
 #define POSICION_RELOJES_F   46
 #define POSICION_RELOJES_C_A 4
@@ -16,6 +18,8 @@ int printf(const char *fmt, ...);
 
 int indexPerros;
 extern jugador_t jugadorA, jugadorB;
+extern int modoDebug;
+extern uint pantalla[79][49];
 
 
 static ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO;
@@ -133,6 +137,20 @@ void imprim(char letra){
     }
     if (letra == 0x32){
         print("m",0,0,3);
+    }
+    if (letra == 0x15){
+        print("y",0,0,3);
+
+    if (modoDebug == 0){
+            modoDebug = 1;
+        }else{
+            modoDebug = 0;            
+        }
+        pantallaDebug();
+
+
+
+        
     }
 }
 
@@ -393,4 +411,73 @@ void aux_limpiarPantalla(){
 
 void imprimirNombre(){
     print("Te voy a dar un byte", 60, 0, 3);
+}
+
+void pantallaDebug(){
+    int i;
+    for (i = 5; i <= 42; i++){
+                int j;
+                for (j = 24 ; j <= 54; j++){
+                    p[i][j].a = 0;
+                    p[i][j].c = 219;
+
+                }   
+    }
+    for (i = 7; i <= 41; i++){
+                int j;
+                for (j = 25 ; j <= 53; j++){
+                    p[i][j].a = 7;
+                    p[i][j].c = 219;
+
+                }   
+    }
+     for (i = 6; i <= 6; i++){
+                int j;
+                for (j = 25 ; j <= 53; j++){
+                    p[i][j].a = 4;
+                    p[i][j].c = 219;
+
+                }   
+    }
+    /*
+    tss tss_perro;
+    if (sched_tarea_actual()->jugador->index == 0){
+        tss_perro = tss_jugadorA[sched_tarea_actual()->index];
+    } else {
+        tss_perro = tss_jugadorB[sched_tarea_actual()->index];
+    }
+    */
+   
+    print("eax", 26, 9, 112);
+    //print_hex(tss_perro.eax, 8, 26, 11, 115);
+
+    print("ebx", 26,11, 112);
+    //print_hex(tss_perro.ebx, 8, 26, 11, 115);
+
+
+    print("ecx", 26, 13, 112);
+    print("edx", 26, 15, 112);
+    print("esi", 26, 17, 112);
+
+    print("edi", 26, 19, 112);
+     print("ebp", 26, 21, 112);
+    print("esp", 26, 23, 112);
+    print("eip", 26, 25, 112);
+    print("cs", 27, 27, 112);
+
+    print("ds", 27, 29, 112);
+    print("es", 27, 31, 112);
+    print("fs", 27, 33, 112);
+    print("gs", 27, 35, 112);
+    print("ss", 27, 37, 112);
+
+    print("eflags", 27, 39, 112);
+    print("cr0", 40, 9, 112);
+    print("cr2", 40, 11, 112);
+    print("cr3", 40, 13, 112);
+    print("cr4", 40, 15, 112);    
+ 
+    print("stack", 40, 26, 112);
+    
+    
 }

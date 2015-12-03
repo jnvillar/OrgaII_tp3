@@ -206,7 +206,6 @@ ushort sched_atender_tick()
 {
    
     int prox = sched_proxima_a_ejecutar();
-    printf("%d",prox);
     if (scheduler.tasks[prox].perro != NULL){
     	screen_actualizar_reloj_perro(scheduler.tasks[prox].perro);
     }

@@ -13,6 +13,7 @@ TRABAJO PRACTICO 3 - System Programming - ORGANIZACION DE COMPUTADOR II - FCEN
 
 int ticks_maximos = 5000;
 int ticks_actuales = 5000;
+int modoDebug = 0;
 
 int escondites[ESCONDITES_CANTIDAD][3] = { // TRIPLAS DE LA FORMA (X, Y, HUESOS)
                                         {76,  25, 5}, {12, 15, 5}, {9, 10, 5}, {47, 21, 5} ,
@@ -37,6 +38,14 @@ void* error()
 {
 	__asm__ ("int3");
 	return 0;
+}
+
+void esunperro(){
+	if(sched_tarea_actual()!=NULL){
+		if(modoDebug == 1){
+			pantallaDebug();
+		}
+	}
 }
 
 uint game_xy2lineal (uint x, uint y) {
