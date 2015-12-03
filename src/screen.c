@@ -48,25 +48,37 @@ uchar screen_valor_actual(uint fila, uint columna)
 void imprim(char letra){
 
     if (letra == 0x1E){
-        print("a",0,0,3);
+        print("a",0,0,3);      
+        game_jugador_moverse(&jugadorA,-1,0);
     }
     if (letra == 0x1F){
-        print("s",0,0,3);
+        print("s",0,0,3);     
+        game_jugador_moverse(&jugadorA,0,1);
     }
     if (letra == 0x20){
-        print("d",0,0,3);
+        print("d",0,0,3);      
+        game_jugador_moverse(&jugadorA,1,0);
     }
     if (letra == 0x11){
         print("w",0,0,3);
+        game_jugador_moverse(&jugadorA,0,-1);
     }
     if (letra == 0x24){
         print("j",0,0,3);
+        game_jugador_moverse(&jugadorB,-1,0);
     }
     if (letra == 0x26){
-        print("l",0,0,3);
+        print("L",0,0,3);
+        game_jugador_moverse(&jugadorB,1,0);
+    }
+    if (letra == 0x17){
+        print("i",0,0,3);
+        game_jugador_moverse(&jugadorB,0,-1);
     }
     if (letra == 0x25){
         print("k",0,0,3);
+        game_jugador_moverse(&jugadorB,0,1);
+
     }
     if (letra == 0x10){
         print("q",0,0,3);

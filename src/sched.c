@@ -16,6 +16,9 @@ void sched_inicializar()
 	scheduler.current = 0;
 	scheduler.tasks[0].gdt_index = 13;
 	scheduler.tasks[0].perro = NULL;
+	scheduler.ultimojugador = 0;
+	scheduler.ultimoperroA = 0;
+	scheduler.ultimoperroB = 0;
 
 	int i = 1;
 	while(i<=MAX_CANT_TAREAS_VIVAS){		
@@ -90,19 +93,21 @@ void sched_agregar_tarea(perro_t *perro)
 
 void sched_remover_tarea(unsigned int gdt_index)
 {
+	scheduler.tasks[sched_buscar_indice_tarea(gdt_index)].perro->libre = TRUE;
+	screen_pintar_reloj_perro(scheduler.tasks[sched_buscar_indice_tarea(gdt_index)].perro);
 	int i = 0;
-
 	while(i<=MAX_CANT_TAREAS_VIVAS){
 		if(scheduler.tasks[i].gdt_index == gdt_index){			
 			scheduler.tasks[i].perro = NULL;
 		}
 		i++;
 	}
+
 	if (scheduler.tasks[scheduler.current].gdt_index == gdt_index){
 		scheduler.current = 0;
 		__asm __volatile(        
-        "int $0x46     \n"       
-    );
+        			"int $0x46     \n"       
+  		 );
 	}
 }
 
@@ -110,7 +115,7 @@ void sched_saltar_idle(){
 	scheduler.current = 0;
 }
 
-
+/*
 uint sched_proxima_a_ejecutar()
 {
 	int i = scheduler.current;
@@ -145,17 +150,106 @@ uint sched_proxima_a_ejecutar()
 	return 0;   
 	
 }
+*/
 
+
+uint sched_proxima_a_ejecutar()
+{
+
+	int j = 0;
+	if (scheduler.tasks[scheduler.current].perro != NULL){ // SI NO ESTOY EN LA IDLE
+		uint jugador = scheduler.tasks[scheduler.current].perro->jugador->index;
+		if (jugador == 0){
+			while (j<=7){
+				if (scheduler.tasks[((scheduler.ultimoperroB+j+1)%8)+9].perro != NULL){
+					return ((scheduler.ultimoperroB+j+1)%8)+9;
+				}
+				j++;
+			}
+
+		} else {
+			while (j<=7){
+				if (scheduler.tasks[((scheduler.ultimoperroA+1+j)%8)+1].perro != NULL){
+					return ((scheduler.ultimoperroA+1+j)%8)+1;
+				}
+				j++;
+			}
+		}		
+	} else {
+		if (scheduler.ultimojugador == 0){
+			while (j<=7){
+				if (scheduler.tasks[((scheduler.ultimoperroB+j+1)%8)+9].perro != NULL){
+					return ((scheduler.ultimoperroB+j+1)%8)+9;
+				}
+				j++;
+			}
+		} else {
+			while (j<=7){
+				if (scheduler.tasks[((scheduler.ultimoperroA+1+j)%8)+1].perro != NULL){
+					return ((scheduler.ultimoperroA+1+j)%8)+1;
+				}
+				j++;
+			}
+		}		 
+	}
+	j = 0;	
+
+	if (scheduler.tasks[scheduler.current].perro != NULL && scheduler.tasks[scheduler.current].perro->jugador->index == 0){ 		// SI NO ENCONTRO NINGUN PERRO VIVO DEL OTRO JUGADOR
+		while (j<=7){
+			if (scheduler.tasks[((scheduler.ultimoperroA+1+j)%8)+1].perro != NULL){
+				return ((scheduler.ultimoperroA+1+j)%8)+1;
+			}
+			j++;
+		}
+
+	} else if (scheduler.tasks[scheduler.current].perro != NULL && scheduler.tasks[scheduler.current].perro->jugador->index == 1){
+		while (j<=7){
+			if (scheduler.tasks[((scheduler.ultimoperroB+j+1)%8)+9].perro != NULL){
+				return ((scheduler.ultimoperroB+j+1)%8)+9;
+			}
+			j++;
+		}
+	} else {
+		if (scheduler.ultimojugador == 0){
+			while (j<=7){
+				if (scheduler.tasks[((scheduler.ultimoperroA+1+j)%8)+1].perro != NULL){
+					return ((scheduler.ultimoperroA+1+j)%8)+1;
+				}
+				j++;
+				
+			}
+		} else {
+			while (j<=7){
+				if (scheduler.tasks[((scheduler.ultimoperroB+j+1)%8)+9].perro != NULL){
+					return ((scheduler.ultimoperroB+j+1)%8)+9;
+				}
+				j++;
+			}
+		}
+	}
+	
+
+	return 0;   
+	
+}
 
 ushort sched_atender_tick()
 {
    
     int prox = sched_proxima_a_ejecutar();
+
     if(sched_tarea_actual() == scheduler.tasks[prox].perro){    	
     	
     	return scheduler.tasks[scheduler.current].gdt_index;
     	
     }else{
+    	if (sched_tarea_actual() != NULL && sched_tarea_actual()->jugador->index == 0){
+    		scheduler.ultimoperroA = sched_tarea_actual()->index;
+    		scheduler.ultimojugador = sched_tarea_actual()->jugador->index;
+    	} else if (sched_tarea_actual() != NULL && sched_tarea_actual()->jugador->index == 1){
+    		scheduler.ultimoperroB = sched_tarea_actual()->index;
+    		scheduler.ultimojugador = sched_tarea_actual()->jugador->index;
+    	}
     	scheduler.current = prox;
     	return scheduler.tasks[scheduler.current].gdt_index;
     }

@@ -52,6 +52,8 @@ typedef struct perro_t
 extern int escondites[ESCONDITES_CANTIDAD][3];
 extern int ultimo_cambio;
 extern perro_t *game_perro_actual;
+extern int ticks_actuales;
+extern int ticks_maximos;
 
 
 typedef struct jugador_t

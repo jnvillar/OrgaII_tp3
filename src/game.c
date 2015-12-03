@@ -11,8 +11,8 @@ TRABAJO PRACTICO 3 - System Programming - ORGANIZACION DE COMPUTADOR II - FCEN
 
 #include <stdarg.h>
 
-int ticks_maximos = 300000;
-int ticks_actuales = 300000;
+int ticks_maximos = 5000;
+int ticks_actuales = 5000;
 
 int escondites[ESCONDITES_CANTIDAD][3] = { // TRIPLAS DE LA FORMA (X, Y, HUESOS)
                                         {76,  25, 50}, {12, 15, 50}, {9, 10, 100}, {47, 21, 100} ,
@@ -99,6 +99,7 @@ void game_terminar_si_es_hora()
 	}
 
 	ticks_actuales--;
+	
 
 	if (huesos == 0 || ticks_actuales == 0){
 		i = 0;

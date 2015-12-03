@@ -5,8 +5,7 @@
 #include "tss.h"
 
 int printf(const char *fmt, ...);
-extern ticks_actuales;
-extern ticks_maximos;
+
 
 // realiza inicialización básica de un perro. El perro aun no está vivo ni por lanzarse. Setea jugador, indice, etc
 void game_perro_inicializar(perro_t *perro, jugador_t *j, uint index, uint id)
@@ -39,7 +38,7 @@ void game_perro_reciclar_y_lanzar(perro_t *perro, uint tipo)
 	sched_agregar_tarea(perro);
 	tss_completar(perro->jugador->index, perro->index, perro);
 
-
+	screen_actualizar_reloj_perro(perro);
 
 
 	//screen_actualizar_posicion_mapa(perro->x, perro-> y);
@@ -93,11 +92,7 @@ uint game_perro_mover(perro_t *perro, direccion dir)
 
     // ~~~ completar ~~~
 
-   	if (game_perro_en_posicion(nuevo_x,nuevo_y) != NULL){ 			
-   		if (game_perro_en_posicion(nuevo_x,nuevo_y)->jugador == perro->jugador){ 		// PARA QUE NO PISE EL PERRO, SI TIENEN EL MISMO DUEÑO
-   			// CUIDADO, SE PODRIAN TRABAR
-   		} 
-   	} else {
+   	
    		perro->x = nuevo_x;
 		perro->y = nuevo_y;		
 		if(nuevo_x>79 || nuevo_y>49){
@@ -107,7 +102,7 @@ uint game_perro_mover(perro_t *perro, direccion dir)
 			screen_actualizar_posicion_mapa(perro->x, perro->y);
 		}
 		
-   	}
+   	
     
 
     return nuevo_x + nuevo_y + viejo_x + viejo_y + res; // uso todas las variables para que no tire warning->error.

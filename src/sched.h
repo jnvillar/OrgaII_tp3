@@ -31,6 +31,9 @@ typedef struct sched_t
 {
     sched_task_t tasks[MAX_CANT_TAREAS_VIVAS+1];
     ushort current;
+    ushort ultimoperroA;
+    ushort ultimoperroB;
+    ushort ultimojugador;
 } sched_t;
 
 extern sched_t scheduler;
