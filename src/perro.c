@@ -92,16 +92,23 @@ uint game_perro_mover(perro_t *perro, direccion dir)
 
     // ~~~ completar ~~~
 
-   	
+    if (game_perro_en_posicion(nuevo_x,nuevo_y) != NULL){
+    	if (game_perro_en_posicion(nuevo_x,nuevo_y)->jugador == perro->jugador){
+
+    	}
+    } else{
+
+
    		perro->x = nuevo_x;
 		perro->y = nuevo_y;		
-		if(nuevo_x>79 || nuevo_y>49){
+		if(nuevo_x>79 || nuevo_y>43 || nuevo_x<0 || nuevo_y < 0 ){
 			game_perro_termino(perro);
 		} else {
 			mmu_mover_perro(perro, viejo_x, viejo_y);		
 			screen_actualizar_posicion_mapa(perro->x, perro->y);
 		}
-		
+    }
+	
    	
     
 

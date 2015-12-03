@@ -9,6 +9,9 @@ definicion de funciones del scheduler
 #include "i386.h"
 #include "screen.h"
 
+int printf(const char *fmt, ...);
+
+
 sched_t scheduler;
 
 void sched_inicializar()
@@ -112,7 +115,15 @@ void sched_remover_tarea(unsigned int gdt_index)
 }
 
 void sched_saltar_idle(){
+	if (sched_tarea_actual() != NULL && sched_tarea_actual()->jugador->index == 0){
+		scheduler.ultimoperroA = sched_tarea_actual()->index;
+		scheduler.ultimojugador = sched_tarea_actual()->jugador->index;
+	} else if (sched_tarea_actual() != NULL && sched_tarea_actual()->jugador->index == 1){
+		scheduler.ultimoperroB = sched_tarea_actual()->index;
+		scheduler.ultimojugador = sched_tarea_actual()->jugador->index;
+	}
 	scheduler.current = 0;
+
 }
 
 /*
@@ -175,7 +186,7 @@ uint sched_proxima_a_ejecutar()
 				j++;
 			}
 		}		
-	} else {
+	} else { 			// SI ESTOY EN LA IDLE
 		if (scheduler.ultimojugador == 0){
 			while (j<=7){
 				if (scheduler.tasks[((scheduler.ultimoperroB+j+1)%8)+9].perro != NULL){
@@ -192,8 +203,8 @@ uint sched_proxima_a_ejecutar()
 			}
 		}		 
 	}
-	j = 0;	
 
+	j = 0; 		// EN CASO DE QUE EL PROXIMO JUGADOR NO TENGA PERROS VIVOS
 	if (scheduler.tasks[scheduler.current].perro != NULL && scheduler.tasks[scheduler.current].perro->jugador->index == 0){ 		// SI NO ENCONTRO NINGUN PERRO VIVO DEL OTRO JUGADOR
 		while (j<=7){
 			if (scheduler.tasks[((scheduler.ultimoperroA+1+j)%8)+1].perro != NULL){
@@ -209,7 +220,7 @@ uint sched_proxima_a_ejecutar()
 			}
 			j++;
 		}
-	} else {
+	} else {			// IDLE
 		if (scheduler.ultimojugador == 0){
 			while (j<=7){
 				if (scheduler.tasks[((scheduler.ultimoperroA+1+j)%8)+1].perro != NULL){
@@ -237,20 +248,21 @@ ushort sched_atender_tick()
 {
    
     int prox = sched_proxima_a_ejecutar();
-
+    if (scheduler.tasks[prox].perro != NULL){
+    	screen_actualizar_reloj_perro(scheduler.tasks[prox].perro);
+    }
     if(sched_tarea_actual() == scheduler.tasks[prox].perro){    	
     	
     	return scheduler.tasks[scheduler.current].gdt_index;
     	
     }else{
-    	if (sched_tarea_actual() != NULL && sched_tarea_actual()->jugador->index == 0){
-    		scheduler.ultimoperroA = sched_tarea_actual()->index;
-    		scheduler.ultimojugador = sched_tarea_actual()->jugador->index;
-    	} else if (sched_tarea_actual() != NULL && sched_tarea_actual()->jugador->index == 1){
-    		scheduler.ultimoperroB = sched_tarea_actual()->index;
-    		scheduler.ultimojugador = sched_tarea_actual()->jugador->index;
-    	}
+    	
     	scheduler.current = prox;
+
+
+    
+
+
     	return scheduler.tasks[scheduler.current].gdt_index;
     }
     

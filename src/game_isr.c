@@ -37,7 +37,7 @@ if(syscall == 1){
 void game_atender_tick(perro_t *perro)
 {
 	if (perro != NULL){
-		screen_actualizar_reloj_perro(perro);
+		
 		game_perro_ver_si_en_cucha(perro);
 
 	}
