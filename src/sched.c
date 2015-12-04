@@ -96,10 +96,10 @@ void sched_agregar_tarea(perro_t *perro)
 
 void sched_remover_tarea(unsigned int gdt_index)
 {
-	scheduler.tasks[sched_buscar_indice_tarea(gdt_index)].perro->libre = TRUE;
-	
+	scheduler.tasks[sched_buscar_indice_tarea(gdt_index)].perro->libre = TRUE;	
 	screen_pintar_reloj_perro(scheduler.tasks[sched_buscar_indice_tarea(gdt_index)].perro);
-	int i = 0;
+
+	int i = 1;
 	while(i<=MAX_CANT_TAREAS_VIVAS){
 		if(scheduler.tasks[i].gdt_index == gdt_index){
 			scheduler.tasks[i].perro = NULL;

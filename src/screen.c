@@ -55,6 +55,7 @@ void imprim(char letra){
         if (letra == 0x15){
             print("y",0,0,3);
             seguirJuego();
+            return;
         } else {
             return;
         }
@@ -439,7 +440,6 @@ void imprimirNombre(){
 
 void pantallaDebug(char* excepcion){
     print(excepcion, 0, 0, 15);
-
     int i;
     for (i = 5; i <= 42; i++){
                 int j;

@@ -69,6 +69,7 @@ void esPerro(char* excepcion){
 void seguirJuego(){
     restaurarPantalla();
 	int perro = scheduler.ultimojugador == 0 ? scheduler.ultimoperroA : scheduler.ultimoperroB;
+		
     sched_remover_tarea(14+scheduler.ultimojugador*8+perro);
     juegoFrenado = 0;
 }
