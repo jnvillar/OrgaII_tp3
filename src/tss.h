@@ -57,5 +57,6 @@ typedef struct str_tss {
 
 void tss_inicializar();
 void tss_completar(int jugador, int perro, perro_t *rrope);
+tss darTss(uint jugador, uint perro);
 
 #endif  /* !__TSS_H__ */

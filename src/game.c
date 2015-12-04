@@ -14,6 +14,9 @@ TRABAJO PRACTICO 3 - System Programming - ORGANIZACION DE COMPUTADOR II - FCEN
 int ticks_maximos = 5000;
 int ticks_actuales = 5000;
 int modoDebug = 0;
+uint pantallaa[50][80];
+uint pantallac[50][80];
+static ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO;
 
 int escondites[ESCONDITES_CANTIDAD][3] = { // TRIPLAS DE LA FORMA (X, Y, HUESOS)
                                         {76,  25, 5}, {12, 15, 5}, {9, 10, 5}, {47, 21, 5} ,
@@ -40,12 +43,23 @@ void* error()
 	return 0;
 }
 
-void esunperro(){
+void esPerro(){
+	
 	if(sched_tarea_actual()!=NULL){
 		if(modoDebug == 1){
+			int i,j;
+			for ( i = 0; i < 50; ++i)
+			{
+				for ( j = 0; j < 80; ++j)
+				{
+					pantallaa[i][j] = p[i][j].a;
+					pantallac[i][j] = p[i][j].c;
+				}
+			}			
 			pantallaDebug();
 		}
 	}
+	
 }
 
 uint game_xy2lineal (uint x, uint y) {

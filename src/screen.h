@@ -20,6 +20,7 @@
 #include "i386.h"
 #include "sched.h"
 #include "game.h"
+#include "tss.h"
 
 //global aux_limpiarPantalla
 
@@ -87,6 +88,7 @@ void screen_pintar_relojes();
 void screen_actualizar_posicion_mapa(uint x, uint y);
 void screen_stop_game_show_winner(jugador_t *j);
 void pantallaDebug();
+void restaurarPantalla();
 
 //void aux_limpiarPantalla();
 

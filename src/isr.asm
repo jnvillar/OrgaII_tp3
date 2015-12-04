@@ -32,6 +32,7 @@ extern sched_atender_tick
 extern sched_proxima_a_ejecutar
 extern game_syscall_manejar
 extern sched_saltar_idle
+extern esPerro
 
 ;;
 ;; Definición de MACROS
@@ -82,6 +83,7 @@ _isr%1:
     add esp, 4
     add esp, 4
     add esp, 4
+    call esPerro
     jmp $
 
         

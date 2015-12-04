@@ -66,17 +66,17 @@ void tss_completar(int jugador, int perro, perro_t *rrope){
 	    tss_jugadorA[posicion].esp = 0x0402000-0xC;
 	    tss_jugadorA[posicion].eip = 0x00401000;
 	    tss_jugadorA[posicion].eflags = 0x202;
-		tss_jugadorA[posicion].esp0 = (espCero+4096);
-		tss_jugadorA[posicion].iomap = 0xFFFF;
-		tss_jugadorA[posicion].ldt = 0x00000000;
-		tss_jugadorA[posicion].ss0 = 0x48;
-		uint nuevoCr3 = mmu_inicializar_memoria_perro(rrope, jugador, perro);
-		tss_jugadorA[posicion].cr3 = nuevoCr3;
+	    tss_jugadorA[posicion].esp0 = (espCero+4096);
+	    tss_jugadorA[posicion].iomap = 0xFFFF;
+	    tss_jugadorA[posicion].ldt = 0x00000000;
+	    tss_jugadorA[posicion].ss0 = 0x48;
 
+	    uint nuevoCr3 = mmu_inicializar_memoria_perro(rrope, jugador, perro);
+	    tss_jugadorA[posicion].cr3 = nuevoCr3;
 
-		gdt[rrope->id].base_0_15 =   (uint )&tss_jugadorA[posicion] & 0x0000FFFF;
-		gdt[rrope->id].base_23_16 = ((uint )&tss_jugadorA[posicion] & 0x00FF0000) >> 16;
-		gdt[rrope->id].base_31_24 = ((uint )&tss_jugadorA[posicion] & 0xFF000000) >> 24;
+	    gdt[rrope->id].base_0_15 =   (uint )&tss_jugadorA[posicion] & 0x0000FFFF;
+	    gdt[rrope->id].base_23_16 = ((uint )&tss_jugadorA[posicion] & 0x00FF0000) >> 16;
+	    gdt[rrope->id].base_31_24 = ((uint )&tss_jugadorA[posicion] & 0xFF000000) >> 24;
 
 	} else {
 	    tss_jugadorB[posicion].cs = 0x5B;
@@ -94,16 +94,24 @@ void tss_completar(int jugador, int perro, perro_t *rrope){
 	    tss_jugadorB[posicion].esp = 0x0402000-0xC;
 	    tss_jugadorB[posicion].eip = 0x00401000;
 	    tss_jugadorB[posicion].eflags = 0x202;
-		tss_jugadorB[posicion].esp0 = (espCero+4096);
-		tss_jugadorB[posicion].iomap = 0xFFFF;
-		tss_jugadorB[posicion].ldt = 0x00000000;
-		tss_jugadorB[posicion].ss0 = 0x48;
+	    tss_jugadorB[posicion].esp0 = (espCero+4096);
+	    tss_jugadorB[posicion].iomap = 0xFFFF;
+	    tss_jugadorB[posicion].ldt = 0x00000000;
+	    tss_jugadorB[posicion].ss0 = 0x48;
 
-		uint nuevoCr3 = mmu_inicializar_memoria_perro(rrope, jugador, perro);
-		
-		tss_jugadorB[posicion].cr3 = nuevoCr3;
-		gdt[rrope->id].base_0_15 =   (uint )&tss_jugadorB[posicion] & 0x0000FFFF;
-		gdt[rrope->id].base_23_16 = ((uint )&tss_jugadorB[posicion] & 0x00FF0000) >> 16;
-		gdt[rrope->id].base_31_24 = ((uint )&tss_jugadorB[posicion] & 0xFF000000) >> 24;
+	    uint nuevoCr3 = mmu_inicializar_memoria_perro(rrope, jugador, perro);		
+	    tss_jugadorB[posicion].cr3 = nuevoCr3;
+
+	    gdt[rrope->id].base_0_15 =   (uint )&tss_jugadorB[posicion] & 0x0000FFFF;
+	    gdt[rrope->id].base_23_16 = ((uint )&tss_jugadorB[posicion] & 0x00FF0000) >> 16;
+	    gdt[rrope->id].base_31_24 = ((uint )&tss_jugadorB[posicion] & 0xFF000000) >> 24;
+	}
+}
+
+tss darTss(uint jugador, uint perro){
+	if(jugador==0){
+		return tss_jugadorA[perro];
+	}else{
+		return tss_jugadorB[perro];
 	}
 }

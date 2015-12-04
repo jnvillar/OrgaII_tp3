@@ -19,7 +19,8 @@ int printf(const char *fmt, ...);
 int indexPerros;
 extern jugador_t jugadorA, jugadorB;
 extern int modoDebug;
-extern uint pantalla[79][49];
+extern uint pantallaa[79][49];
+extern uint pantallac[79][49];
 
 
 static ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO;
@@ -143,10 +144,13 @@ void imprim(char letra){
 
     if (modoDebug == 0){
             modoDebug = 1;
+              //pantallaDebug();
         }else{
-            modoDebug = 0;            
+            modoDebug = 0;  
+            restaurarPantalla();
+           // seguirJuego();          
         }
-        pantallaDebug();
+      
 
 
 
@@ -409,6 +413,19 @@ void aux_limpiarPantalla(){
  
 }
 
+void restaurarPantalla(){
+    int i,j;
+    for ( i = 0; i < 50; ++i)
+    {
+        for ( j = 0; j < 80; ++j)
+        {
+            p[i][j].a = pantallaa[i][j];
+            p[i][j].c = pantallac[i][j];
+        }
+    }
+}
+
+
 void imprimirNombre(){
     print("Te voy a dar un byte", 60, 0, 3);
 }
@@ -439,45 +456,60 @@ void pantallaDebug(){
 
                 }   
     }
-    /*
-    tss tss_perro;
-    if (sched_tarea_actual()->jugador->index == 0){
-        tss_perro = tss_jugadorA[sched_tarea_actual()->index];
-    } else {
-        tss_perro = tss_jugadorB[sched_tarea_actual()->index];
-    }
-    */
+
    
+    tss tss_perro = darTss(sched_tarea_actual()->jugador->index,sched_tarea_actual()->index);
+     
+      
     print("eax", 26, 9, 112);
-    //print_hex(tss_perro.eax, 8, 26, 11, 115);
-
+                                                print_hex(tss_perro.eax, 8, 30, 9, 127);
     print("ebx", 26,11, 112);
-    //print_hex(tss_perro.ebx, 8, 26, 11, 115);
-
-
+                                                print_hex(tss_perro.ebx, 8, 30, 11, 127);
     print("ecx", 26, 13, 112);
+                                                 print_hex(tss_perro.ecx, 8, 30, 13, 127);
     print("edx", 26, 15, 112);
+                                                 print_hex(tss_perro.edx, 8, 30, 15, 127);
     print("esi", 26, 17, 112);
-
+                                                print_hex(tss_perro.esi, 8, 30, 17, 127);
     print("edi", 26, 19, 112);
+                                                 print_hex(tss_perro.edi, 8, 30, 19, 127);
      print("ebp", 26, 21, 112);
+                                                 print_hex(tss_perro.ebp, 8, 30, 21, 127);
     print("esp", 26, 23, 112);
+                                                 print_hex(tss_perro.esp, 8, 30, 23, 127);
     print("eip", 26, 25, 112);
+                                                 print_hex(tss_perro.eip, 8, 30, 25, 127);
     print("cs", 27, 27, 112);
-
+                                                 print_hex(tss_perro.cs, 8, 30, 27, 127);
     print("ds", 27, 29, 112);
+                                                print_hex(tss_perro.ds, 8, 30, 29, 127);
     print("es", 27, 31, 112);
+                                                print_hex(tss_perro.es, 8, 30, 31, 127);
     print("fs", 27, 33, 112);
+                                                print_hex(tss_perro.fs, 8, 30, 33, 127);
     print("gs", 27, 35, 112);
+                                                print_hex(tss_perro.gs, 8, 30, 35, 127);
     print("ss", 27, 37, 112);
-
+                                                print_hex(tss_perro.ss, 8, 30, 37, 127);
     print("eflags", 27, 39, 112);
+                                                print_hex(tss_perro.eflags, 8, 33, 39, 127);
     print("cr0", 40, 9, 112);
+                                               print_hex(rcr0(), 8, 44, 9, 127);
     print("cr2", 40, 11, 112);
+                                               print_hex(rcr2(), 8, 44, 11, 127);
     print("cr3", 40, 13, 112);
+                                                print_hex(tss_perro.cr3, 8, 44, 13, 127);
     print("cr4", 40, 15, 112);    
- 
-    print("stack", 40, 26, 112);
+                                               print_hex(rcr4(), 8,44, 15, 127);
+
+    print("stack", 40, 26, 112);    
+                                                   print_hex(*((uint *) tss_perro.esp0), 8, 40, 29, 127);
+                                                   print_hex(*((uint *) tss_perro.esp0-8), 8, 40, 30, 127);
+                                                   print_hex(*((uint *) tss_perro.esp0-16), 8, 40, 31, 127);
+                                                   print_hex(*((uint *) tss_perro.esp0-24), 8, 40, 32, 127);
+
+                                            
+
     
     
 }
