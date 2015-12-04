@@ -23,7 +23,7 @@ void task(int x_origen, int y_origen) {
 	int y_actual = y_origen;
 
 	//breakpoint();
-
+	int i = 0;
 	while (TRUE)
 	{
 		int direccion = syscall_olfatear();
@@ -32,6 +32,10 @@ void task(int x_origen, int y_origen) {
 		
 		actualizar(&x_actual, &y_actual, direccion);
 		syscall_moverse(direccion);
+		i++;
+		if (i == 10){
+			i = 5/(i-10);
+		}
 	}
 	while (syscall_cavar() != 0)
 	{}

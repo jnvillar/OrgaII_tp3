@@ -10,13 +10,17 @@ TRABAJO PRACTICO 3 - System Programming - ORGANIZACION DE COMPUTADOR II - FCEN
 #include "screen.h"
 
 #include <stdarg.h>
+int printf(const char *fmt, ...);
 
 int ticks_maximos = 5000;
 int ticks_actuales = 5000;
 int modoDebug = 0;
-uint pantallaa[50][80];
-uint pantallac[50][80];
+uint pantallaA[50][80];
+uint pantallaC[50][80];
 static ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO;
+int juegoFrenado = 0;
+int ordenJugadorA = 0;
+int ordenJugadorB = 0;
 
 int escondites[ESCONDITES_CANTIDAD][3] = { // TRIPLAS DE LA FORMA (X, Y, HUESOS)
                                         {76,  25, 5}, {12, 15, 5}, {9, 10, 5}, {47, 21, 5} ,
@@ -43,23 +47,34 @@ void* error()
 	return 0;
 }
 
-void esPerro(){
+void esPerro(char* excepcion){
 	
 	if(sched_tarea_actual()!=NULL){
 		if(modoDebug == 1){
 			int i,j;
-			for ( i = 0; i < 50; ++i)
-			{
-				for ( j = 0; j < 80; ++j)
-				{
-					pantallaa[i][j] = p[i][j].a;
-					pantallac[i][j] = p[i][j].c;
+			for ( i = 0; i < 50; i++){
+				for ( j = 0; j < 80; j++){
+					pantallaA[i][j] = p[i][j].a;
+					pantallaC[i][j] = p[i][j].c;
 				}
-			}			
-			pantallaDebug();
+			}
+			juegoFrenado = 1;	
+			pantallaDebug(excepcion);		
+
 		}
 	}
-	
+}
+
+
+void seguirJuego(){
+    restaurarPantalla();
+	int perro = scheduler.ultimojugador == 0 ? scheduler.ultimoperroA : scheduler.ultimoperroB;
+    sched_remover_tarea(14+scheduler.ultimojugador*8+perro);
+    juegoFrenado = 0;
+}
+
+int frenado(){
+	return juegoFrenado;
 }
 
 uint game_xy2lineal (uint x, uint y) {
@@ -117,14 +132,27 @@ void game_terminar_si_es_hora()
 	int i = 0;
 	int huesos = 0;
 	while(i<ESCONDITES_CANTIDAD){	
-		huesos = huesos + escondites[i][3];	
+		huesos = huesos + escondites[i][2];	
 		i++;
 	}
+	i=0;
+	
+	while(i<8){
+		if(!jugadorA.perros[i].libre){
+			huesos = huesos + jugadorA.perros[i].huesos;
+			
+		}
+		if(!jugadorB.perros[i].libre){
+			huesos = huesos + jugadorB.perros[i].huesos;			
+		}
+		i++;	
+	}
+	
 
 	ticks_actuales--;
 	
 
-	if (huesos == 0 || ticks_actuales == 0){
+	if (ticks_actuales == 0){
 		i = 0;
 		while(TRUE){
 			print("Game Over",39,i,3);
@@ -133,6 +161,16 @@ void game_terminar_si_es_hora()
 				i = 0;
 			}
 			i++;
+		}
+	}
+	if(huesos == 0){
+
+		if(jugadorA.puntos < jugadorB.puntos){
+			screen_stop_game_show_winner(&jugadorB);
+		}else if (jugadorA.puntos > jugadorB.puntos){
+			screen_stop_game_show_winner(&jugadorA);
+		} else {
+			screen_stop_game_show_winner(NULL);
 		}
 	}
 

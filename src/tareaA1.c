@@ -21,7 +21,6 @@ void task(int x_origen, int y_origen) {
 	int x_actual = x_origen;
 	int y_actual = y_origen;
 
-	//breakpoint();
 
 	while (TRUE)
 	{

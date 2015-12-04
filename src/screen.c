@@ -19,8 +19,8 @@ int printf(const char *fmt, ...);
 int indexPerros;
 extern jugador_t jugadorA, jugadorB;
 extern int modoDebug;
-extern uint pantallaa[79][49];
-extern uint pantallac[79][49];
+extern uint pantallaA[50][80];
+extern uint pantallaC[50][80];
 
 
 static ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO;
@@ -51,7 +51,14 @@ uchar screen_valor_actual(uint fila, uint columna)
 
 
 void imprim(char letra){
-
+    if (juegoFrenado == 1){
+        if (letra == 0x15){
+            print("y",0,0,3);
+            seguirJuego();
+        } else {
+            return;
+        }
+    }
     if (letra == 0x1E){
         print("a",0,0,3);      
         game_jugador_moverse(&jugadorA,-1,0);
@@ -91,8 +98,7 @@ void imprim(char letra){
         indexPerros = sched_buscar_tarea_libre(0);        
         if (indexPerros != 0){
             game_perro_reciclar_y_lanzar(&jugadorA.perros[indexPerros-1], 0);
-        }
-       
+        }      
 
 
 
@@ -123,36 +129,37 @@ void imprim(char letra){
     }
     if (letra == 0x2c){
         print("z",0,0,3);
+        game_jugador_dar_orden(&jugadorA, 1);
     }
     if (letra == 0x2d){
         print("x",0,0,3);
+        game_jugador_dar_orden(&jugadorA, 2);
     }
     if (letra == 0x2e){
         print("c",0,0,3);
+        game_jugador_dar_orden(&jugadorA, 3);
     }
     if (letra == 0x30){
         print("b",0,0,3);
+        game_jugador_dar_orden(&jugadorB, 1);
     }
     if (letra == 0x31){
         print("n",0,0,3);
+        game_jugador_dar_orden(&jugadorB, 2);
     }
     if (letra == 0x32){
         print("m",0,0,3);
+        game_jugador_dar_orden(&jugadorB, 3);
     }
     if (letra == 0x15){
         print("y",0,0,3);
 
-    if (modoDebug == 0){
+        if (modoDebug == 0){
             modoDebug = 1;
-              //pantallaDebug();
-        }else{
-            modoDebug = 0;  
-            restaurarPantalla();
-           // seguirJuego();          
-        }
-      
-
-
+        }else{                
+            modoDebug = 0;         
+        }     
+        
 
         
     }
@@ -414,13 +421,13 @@ void aux_limpiarPantalla(){
 }
 
 void restaurarPantalla(){
+    aux_limpiarPantalla();
+    
     int i,j;
-    for ( i = 0; i < 50; ++i)
-    {
-        for ( j = 0; j < 80; ++j)
-        {
-            p[i][j].a = pantallaa[i][j];
-            p[i][j].c = pantallac[i][j];
+    for ( i = 0; i < 50; i++){
+        for ( j = 0; j < 80; j++){
+            p[i][j].a = pantallaA[i][j];
+            p[i][j].c = pantallaC[i][j];
         }
     }
 }
@@ -430,7 +437,9 @@ void imprimirNombre(){
     print("Te voy a dar un byte", 60, 0, 3);
 }
 
-void pantallaDebug(){
+void pantallaDebug(char* excepcion){
+    print(excepcion, 0, 0, 15);
+
     int i;
     for (i = 5; i <= 42; i++){
                 int j;

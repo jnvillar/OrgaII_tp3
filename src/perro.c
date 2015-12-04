@@ -57,6 +57,8 @@ void game_perro_termino(perro_t *perro)
 {	
 	uint aux = sched_buscar_gdt_tarea(perro);
 	if (aux != 1000){
+		
+
 		sched_remover_tarea(aux);
 	}
 }
@@ -188,8 +190,19 @@ void game_perro_ver_si_en_cucha(perro_t *perro)
 		return;
 
 	game_jugador_anotar_punto(perro->jugador);
+
 	perro->huesos--;
-	if (perro->huesos == 0)
+	if (perro->huesos == 0){
+
 		game_perro_termino(perro);
+
+	}
 }
 
+int game_perro_recibir_orden(perro_t *perro){
+	if (perro->jugador->index == 0){
+		return ordenJugadorA;
+	} else {
+		return ordenJugadorB;
+	}
+}

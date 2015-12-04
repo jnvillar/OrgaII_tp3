@@ -27,7 +27,7 @@ if(syscall == 1){
 } else if(syscall == 3){
 	return game_perro_olfatear(sched_tarea_actual());
 } else if(syscall == 4){
-
+	return game_perro_recibir_orden(sched_tarea_actual());
 }
     return 0;
 }
@@ -36,6 +36,7 @@ if(syscall == 1){
 // ~~~ recibe el perro que está corriendo actualmente
 void game_atender_tick(perro_t *perro)
 {
+
 	if (perro != NULL){		
 		game_perro_ver_si_en_cucha(perro);
 	}

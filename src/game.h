@@ -24,6 +24,8 @@
 #define TIPO_1                            0
 #define TIPO_2                            1
 
+extern int ordenJugadorA;
+extern int ordenJugadorB;
 
 typedef enum direccion_e { ARR = 0x4, ABA = 0x7, DER = 0xA, IZQ = 0xD, AQUI = 0x10} direccion;
 
@@ -54,7 +56,7 @@ extern int ultimo_cambio;
 extern perro_t *game_perro_actual;
 extern int ticks_actuales;
 extern int ticks_maximos;
-
+extern int juegoFrenado;
 
 
 
@@ -161,5 +163,9 @@ perro_t* game_perro_en_posicion(uint x, uint y);
 void game_terminar_si_es_hora();
 
 void esPerro();
+
+void seguirJuego();
+
+int game_perro_recibir_orden(perro_t *perro);
 
 #endif  /* !__GAME_H__ */

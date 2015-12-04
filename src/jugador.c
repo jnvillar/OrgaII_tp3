@@ -10,6 +10,7 @@
 #define POS_INIT_B_Y          MAPA_ALTO - 2
 
 
+
 void game_jugador_inicializar(jugador_t *j)
 {
 	static int index = 0;
@@ -101,9 +102,12 @@ void game_jugador_anotar_punto(jugador_t *j)
 
 
 // guarda la orden en el jugador para que los perros puedan preguntarla luego (mediante un syscall)
-void game_jugador_dar_orden(jugador_t *jugador, int orden)
-{
-	
+void game_jugador_dar_orden(jugador_t *jugador, int orden){
+	if (jugador->index == 0){
+		ordenJugadorA = orden << 16 | jugador->y << 8 | jugador->x;
+	} else {
+		ordenJugadorB = orden << 16 | jugador->y << 8 | jugador->x;
+	}
 }
 
 
