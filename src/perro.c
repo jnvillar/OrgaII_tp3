@@ -41,26 +41,19 @@ void game_perro_reciclar_y_lanzar(perro_t *perro, uint tipo)
 	screen_actualizar_reloj_perro(perro);
 
 
-	//screen_actualizar_posicion_mapa(perro->x, perro-> y);
-	//breakpoint();
-
-	// ahora debo llamar a rutinas que inicialicen un nuevo mapa de
-	// memoria para el nuevo perro, que carguen su tss correspondiente,
-	// lo scheduleen y finalmente lo pinten en pantalla
-
-	// ~~~ completar ~~~
 
 }
 
 // el perro descargó sus huesos o realizó una acción no válida y caputó, hay que sacarlo del sistema.
 void game_perro_termino(perro_t *perro)
 {	
-	uint aux = sched_buscar_gdt_tarea(perro);
-	if (aux != 1000){
-		
-
-		sched_remover_tarea(aux);
+	if (perro == NULL){
+		breakpoint();
+		return;
 	}
+	uint aux = sched_buscar_gdt_tarea(perro);
+	sched_remover_tarea(aux);
+	
 }
 
 // transforma código de dirección en valores x e y 
@@ -82,7 +75,6 @@ uint game_dir2xy(/* in */ direccion dir, /* out */ int *x, /* out */ int *y)
 // *** viene del syscall mover ***
 uint game_perro_mover(perro_t *perro, direccion dir)
 {	
-
 
 	int x, y;
 	uint res = game_dir2xy(dir, &x, &y);

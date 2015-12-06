@@ -63,4 +63,5 @@ uint sched_buscar_gdt_tarea(perro_t *perro);
 
 int sched_buscar_tarea_libre(uint jugador);
 
+
 #endif	/* !__SCHED_H__ */

@@ -15,10 +15,9 @@ int printf(const char *fmt, ...);
 int ticks_maximos = 5000;
 int ticks_actuales = 5000;
 int modoDebug = 0;
-uint pantallaA[50][80];
-uint pantallaC[50][80];
-static ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO;
+
 int juegoFrenado = 0;
+
 int ordenJugadorA = 0;
 int ordenJugadorB = 0;
 
@@ -47,34 +46,27 @@ void* error()
 	return 0;
 }
 
-void esPerro(char* excepcion){
-	
-	if(sched_tarea_actual()!=NULL){
-		if(modoDebug == 1){
-			int i,j;
-			for ( i = 0; i < 50; i++){
-				for ( j = 0; j < 80; j++){
-					pantallaA[i][j] = p[i][j].a;
-					pantallaC[i][j] = p[i][j].c;
-				}
-			}
-			juegoFrenado = 1;	
-			pantallaDebug(excepcion);		
+void continuarJuego(){
+	juegoFrenado = 0;
+	restaurarPantalla();
+	sched_remover_tarea(sched_buscar_gdt_tarea(sched_tarea_actual()));
+}
 
-		}
+void setFrenado(){
+	if (sched_tarea_actual() == NULL){
+		printf("%s\n", "Error");
+		breakpoint();
 	}
+	if (modoDebug == 1){
+		juegoFrenado = 1;
+		pantallaDebug();
+	} else {
+		sched_remover_tarea(sched_buscar_gdt_tarea(sched_tarea_actual()));
+	}
+	
 }
 
-
-void seguirJuego(){
-    restaurarPantalla();
-	int perro = scheduler.ultimojugador == 0 ? scheduler.ultimoperroA : scheduler.ultimoperroB;
-		
-    sched_remover_tarea(14+scheduler.ultimojugador*8+perro);
-    juegoFrenado = 0;
-}
-
-int frenado(){
+int readFrenado(){
 	return juegoFrenado;
 }
 

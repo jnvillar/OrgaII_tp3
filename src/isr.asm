@@ -32,11 +32,12 @@ extern sched_atender_tick
 extern sched_proxima_a_ejecutar
 extern game_syscall_manejar
 extern sched_saltar_idle
-extern esPerro
-extern frenado
+extern setFrenado
+extern readFrenado
 extern sched_saltar_idle
 extern habilitar_pic
-
+extern resetear_pic
+extern deshabilitar_pic
 
 ;;
 ;; Definición de MACROS
@@ -75,16 +76,15 @@ exception33 db     0
 global _isr%1
 
 _isr%1:
-	;xchg bx, bx
-    
-    push exception%1
-    call esPerro
-    add esp, 4
+    call setFrenado
+    call deshabilitar_pic
+    call resetear_pic
+    call habilitar_pic
+    sti
+    jmp $
 
-    
-
-    call sched_saltar_idle
-    jmp 0x68:0
+	
+    iret
 
         
 
@@ -133,9 +133,9 @@ _isr32:
     pushad
     call fin_intr_pic1
 
-    call frenado
+    call readFrenado
     cmp eax, 1
-    je .juegoEstaFrenado
+    je .estaFrenado
 
     call sched_tarea_actual
     push eax    
@@ -161,11 +161,10 @@ _isr32:
         iret
 
 
-
-
-    .juegoEstaFrenado:
+    .estaFrenado:
         popad
         iret
+
 
 
 ;;------------------------------------------------------------------------- 
@@ -183,7 +182,6 @@ _isr33:
     call imprim
     add esp, 4
     popad
-    ;xchg bx, bx
     iret
 
  
@@ -239,9 +237,13 @@ _isr70:
 
     mov eax, [guardar]
     call sched_saltar_idle          ; CORREGIR
-    .saltarIdle:
-        jmp 0x68:0          
+    jmp 0x68:0          
 
     iret
 
+    .saltarIdle:
+        add esp, 8
+        popad
+        jmp 0x68:0
+        iret
 

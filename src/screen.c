@@ -19,9 +19,10 @@ int printf(const char *fmt, ...);
 int indexPerros;
 extern jugador_t jugadorA, jugadorB;
 extern int modoDebug;
-extern uint pantallaA[50][80];
-extern uint pantallaC[50][80];
-
+//uint pantallaA[50][80];
+//uint pantallaC[50][80];
+uint pantallaA[1290];
+uint pantallaC[1290];
 
 static ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO;
 
@@ -53,8 +54,8 @@ uchar screen_valor_actual(uint fila, uint columna)
 void imprim(char letra){
     if (juegoFrenado == 1){
         if (letra == 0x15){
-            print("y",0,0,3);
-            seguirJuego();
+            print("y",0,0,3);    
+            continuarJuego();
             return;
         } else {
             return;
@@ -153,16 +154,12 @@ void imprim(char letra){
         game_jugador_dar_orden(&jugadorB, 3);
     }
     if (letra == 0x15){
-        print("y",0,0,3);
-
+        print("y",0,0,3);      
         if (modoDebug == 0){
             modoDebug = 1;
         }else{                
             modoDebug = 0;         
-        }     
-        
-
-        
+        }        
     }
 }
 
@@ -421,14 +418,14 @@ void aux_limpiarPantalla(){
  
 }
 
-void restaurarPantalla(){
-    aux_limpiarPantalla();
-    
+void restaurarPantalla(){    
     int i,j;
-    for ( i = 0; i < 50; i++){
-        for ( j = 0; j < 80; j++){
-            p[i][j].a = pantallaA[i][j];
-            p[i][j].c = pantallaC[i][j];
+    for ( i = 5; i < 43; i++){
+        for ( j = 24; j < 55; j++){
+            //p[i][j].a = pantallaA[i-5][j-24];
+            //p[i][j].c = pantallaC[i-5][j-24];
+            p[i][j].a = pantallaA[(i-5)*30+(j-24)];
+            p[i][j].c = pantallaC[(i-5)*30+(j-24)];
         }
     }
 }
@@ -438,8 +435,22 @@ void imprimirNombre(){
     print("Te voy a dar un byte", 60, 0, 3);
 }
 
-void pantallaDebug(char* excepcion){
-    print(excepcion, 0, 0, 15);
+void guardarPantalla(){     // ACA ESTA EL PROBLEMA
+    
+    int i,j;
+    for ( i = 5; i < 43; i++){
+        for ( j = 24; j < 55; j++){
+            //pantallaA[i-5][j-24] = p[i][j].a;
+            //pantallaC[i-5][j-24] = p[i][j].c;
+            pantallaA[(i-5)*30+(j-24)] = p[i][j].a;
+            pantallaC[(i-5)*30+(j-24)] = p[i][j].c;
+        }
+    }
+}
+
+void pantallaDebug(/*char* excepcion*/){
+    guardarPantalla();
+    //print(excepcion, 0, 0, 15);
     int i;
     for (i = 5; i <= 42; i++){
                 int j;
@@ -482,7 +493,7 @@ void pantallaDebug(char* excepcion){
                                                 print_hex(tss_perro.esi, 8, 30, 17, 127);
     print("edi", 26, 19, 112);
                                                  print_hex(tss_perro.edi, 8, 30, 19, 127);
-     print("ebp", 26, 21, 112);
+    print("ebp", 26, 21, 112);
                                                  print_hex(tss_perro.ebp, 8, 30, 21, 127);
     print("esp", 26, 23, 112);
                                                  print_hex(tss_perro.esp, 8, 30, 23, 127);
@@ -513,12 +524,12 @@ void pantallaDebug(char* excepcion){
 
     print("stack", 40, 26, 112);    
                                                    print_hex(*((uint *) tss_perro.esp0), 8, 40, 29, 127);
-                                                   print_hex(*((uint *) tss_perro.esp0-8), 8, 40, 30, 127);
-                                                   print_hex(*((uint *) tss_perro.esp0-16), 8, 40, 31, 127);
-                                                   print_hex(*((uint *) tss_perro.esp0-24), 8, 40, 32, 127);
+                                                   print_hex(*((uint *) (tss_perro.esp0-8)), 8, 40, 30, 127);
+                                                   print_hex(*((uint *) (tss_perro.esp0-16)), 8, 40, 31, 127);
+                                                   print_hex(*((uint *) (tss_perro.esp0-24)), 8, 40, 32, 127);
 
                                             
 
-    
+    //breakpoint();
     
 }
