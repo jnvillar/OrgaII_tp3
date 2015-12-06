@@ -424,8 +424,8 @@ void restaurarPantalla(){
         for ( j = 24; j < 55; j++){
             //p[i][j].a = pantallaA[i-5][j-24];
             //p[i][j].c = pantallaC[i-5][j-24];
-            p[i][j].a = pantallaA[(i-5)*30+(j-24)];
-            p[i][j].c = pantallaC[(i-5)*30+(j-24)];
+            p[i][j].a = pantallaA[(i-5)*31+(j-24)];
+            p[i][j].c = pantallaC[(i-5)*31+(j-24)];
         }
     }
 }
@@ -442,8 +442,8 @@ void guardarPantalla(){     // ACA ESTA EL PROBLEMA
         for ( j = 24; j < 55; j++){
             //pantallaA[i-5][j-24] = p[i][j].a;
             //pantallaC[i-5][j-24] = p[i][j].c;
-            pantallaA[(i-5)*30+(j-24)] = p[i][j].a;
-            pantallaC[(i-5)*30+(j-24)] = p[i][j].c;
+            pantallaA[(i-5)*31+(j-24)] = p[i][j].a;
+            pantallaC[(i-5)*31+(j-24)] = p[i][j].c;
         }
     }
 }
