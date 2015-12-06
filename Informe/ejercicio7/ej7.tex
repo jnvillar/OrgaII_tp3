@@ -22,13 +22,13 @@ En este ejercicio realizaremos el \textit{scheduler}.
 
 \subsection{Ítem a): Inicializar el \textit{scheduler}}
 
-Para incializar el scheduler completamos la funicón \textit{void sched\_inicializar()} del archivo sched.d. En el tp el scheduler es una estructura que posee un array de tareas denimoinado \textit{tasks} y un int denominado \textit{current} en el cual se guarda la tarea actual. Las tareas tambien son estructuras, y contienen un int para recordar la posicion en la que se guarda en la gdt y un puntero a la tarea que representan. Esta estructura se puede obserbar en la siguiente imagen:
+Para incializar el scheduler completamos la funicón \textit{void sched\_inicializar()} del archivo sched.d. En el tp el scheduler es una estructura que posee un array de tareas denimoinado \textit{tasks} y un int denominado \textit{current} en el cual se guarda la tarea actual. Las tareas tambien son estructuras, y contienen un int para recordar la posicion en la que se guarda en la gdt y un puntero a la tarea que representan. Además le agregamos a esta estructura 3 ints, los cuales vamos a utilizar para saber lo siguiente: último jugador, último perro usado por el jugador A y último perro utilizado por el jugador B Esta estructura se puede obserbar en la siguiente imagen:
 
 \begin{figure}[H]
 \begin{center}
 \minipage{0.5\textwidth}
  \includegraphics[width=\linewidth]{ejercicio7/sched.png}
- \caption{{\small Estrctura del scheduler usado} }
+ \caption{{\small Estructura del scheduler usado} }
 \endminipage
 \end{center}
 \end{figure}
@@ -50,26 +50,20 @@ Para inicializar la estructura del scheduler realiza lo siguiente:
 
 \item [\textit{A}] Setea el valor de \textit{current} en 0, pues la tarea inicial debe ser la tarea \textit{IDLE} y por convención decidimos que esta se encuentre en la posición 0 del array de tareas. Devido a la decisión anterior, setiamos en el vector de tareas que el gdt\_index de la tarea 0 sea 13 (posición en la \textit{GDT} de la tarea \textit{IDLE} ) y que el puntero a la tarea de la tarea 0 sea \textit{NULL}.
 
-\item [\textit{B}] Luego itera por todo el array de tareas \textit{tasks} seteandole a cada tarea una posición en la gdt correspondiente y seteando el puntero decada una en \textit{NULL}.
+\item [\textit{B}] Setea los 3 ints que agregamos en 0 ya que nadie jugo todavía.
+
+\item [\textit{C}] Luego itera por todo el array de tareas \textit{tasks} seteandole a cada tarea una posición en la gdt correspondiente y seteando el puntero decada una en \textit{NULL}.
 
 \end{itemize}
 
 \subsection{Ítem b):  Crear la función  \textit{sched\_proxima\_a\_ejecutar()}}
 
-Esta función comienza guardando cual es el jugador de la tarea actual y busca las siguiente tarea que corresponda al suiguiente jugador. Para esto itera por todas las tareas y se fija entre las que no tienen un puntero a una tarea \textit{NULL} si alguna pertence al jugador contrario, en caso de que no la encuentre busca devuelta entre todas las tareas pero solo fijandose si no tienen un puntero a una tarea  \textit{NULL}.
+Esta función comienza guardando cual es el jugador de la tarea actual y busca las siguiente tarea que corresponda al siguiente jugador. Para eso se fija cual fue el último perro usado por el jugador contrario e itera por todos los perros de este a partir del último utilizado. Si no llega a encontrar ningun perro empieza a iterar por los perros del jugador actual, tambien empezando a iterar desde el último perro utilizado por el jugador actual. Notar que para lograr esta forma de cambiar las tareas necesitabamos agregar los 3 ints que aclaramos al principio.
 
-\begin{figure}[H]
-\begin{center}
-\minipage{1.00\textwidth}
-\includegraphics[width=\linewidth]{ejercicio7/proxeje.png}
-\caption{{\small \textit{Funcion proxima tarea a ejecutar }}}
-\endminipage
-\end{center}
-\end{figure}
 
 \subsection{Ítem c):  Crear una función \textit{sched\_atender\_tick()}}
 
-Esta función debería devolver la posicion de la \textit{GDT} de la proxima tarea, para eso utiliza la funcion del item anterior, además actualiza el int \textit{current} de la estructura del sheduler. 
+Esta función debería devolver la posicion de la \textit{GDT} de la proxima tarea, para eso utiliza la funcion del ítem anterior, además actualiza el int \textit{current} de la estructura del sheduler y actualiza cual fue el último jugador y su último perro utilizado.
 
 \begin{figure}[H]
 \begin{center}
@@ -81,6 +75,8 @@ Esta función debería devolver la posicion de la \textit{GDT} de la proxima tar
 \end{figure}
 
 \subsection{Ítem d):  Atender la interrupcion 0x46}
+
+Explicado en el ejercicio 6, ítem h, es igual solo que ahora no se ignora el jmp a la tarea $idle$
 
 \subsection{Ítem e):  Realiza el intercabio e tareas}
 
@@ -95,11 +91,13 @@ El intercambio de tareas lo realizamos en cada interrupción del reloj, utilizan
     call game\_atender\_tick \\           
     call sched\_atender\_tick \\
 
+    shl ax, 3  \\
     str cx \\
     cmp ax,cx \\
     je .fin \\
-    mov [selector], ax \\
-    jmp selector:offset \\
+
+    mov [sched_tarea_selector], ax \\
+    jmp far:[sched_tarea_offset] \\
 
     .fin: \\
      call screen\_actualizar\_reloj\_global \\    
@@ -109,6 +107,83 @@ El intercambio de tareas lo realizamos en cada interrupción del reloj, utilizan
 
 \end{center}
 
-Esta rutina pregunta por la poscicion de la \textit{GDT}  de la proxima tarea a ejecutar y si la proxima tarea a ejecutar es la misma que se esta ejecutando ahora no hace nada, sin embargo si es diferente realiza un \textit{jmp far} utilizando como selector la posicion en la \textit{GDT} correspondiente. De esta forma se  guarda la \textit{TSS} actual y se carga la nueva. 
+Esta rutina pregunta por la poscicion de la \textit{GDT}  de la proxima tarea a ejecutar y si la proxima tarea a ejecutar es la misma que se esta ejecutando ahora no hace nada, sin embargo si es diferente realiza un \textit{jmp far} utilizando como selector la posicion en la \textit{GDT} correspondiente. De esta forma se  guarda la \textit{TSS} actual y se carga la nueva. \\
+
+A esta rutina luego le agregamos más código para ver si el juego estaba frenado porque el modo debug había detectado que un perro habia generado una falta. No lo mostramos en este punto para que quede mas claro, además el modo debug no influye en este ítem.
+
+\subsection{Ítem f):  Realiza el mecanismo de debug}
+
+Para este ítem realizamos varias cosas:
+
+\begin{itemize}
+
+\item[A]: Creamos dos variables, $juego_frenado$ y $modo_debug$, la primera vale 0 por defecto y pasa a valer 1 cuando el modo debug esta activado y se detecta que un perro causo una falta, sirve para que si esta prendida, la rutina del reloj salte siempre a la tarea $idle$. La segunda simplemente indica si el modo debug esta activado o no, si esta activada el juego se pone en pausa y muestra la pantalla debug cuando un perro rompe el programa, sino, esta pantalla no se muestra y simplemente se elimina el perro.
+
+\item[B]: Modificamos la $RAE$ correspondiente a las primeras 20 interrupciones, para que de esta forma, en vez de hacer simplemente jmp \$ salte a la funcion $set_frenado()$.
+
+\begin{figure}[H]
+\begin{center}
+\minipage{0.8\textwidth}
+\includegraphics[width=\linewidth]{ejercicio7/isr.png}
+\endminipage
+\end{center}
+\end{figure}
+
+
+\item[C]: Creamos la funcion $set_frenado()$ la cual se fija si el modo debug esta activado, si lo esta, pone la variable $juego_frenado$ en 1 e imprime la pantalla debug. Si el modo debug no esta activado simplemente elimina la tarea actual, la cual es la que rompió el juego. De esta manera el juego puede continuar.
+
+\begin{figure}[H]
+\begin{center}
+\minipage{0.8\textwidth}
+\includegraphics[width=\linewidth]{ejercicio7/setfrenado.png}
+\caption{{\small \textit{Funcion proxima tarea a ejecutar }}}
+\endminipage
+\end{center}
+\end{figure}
+
+
+\item[D]: Modificamos la rutina del reloj para que si la variable $juego_frenado$ esta en 1, salte directamente a la tarea $idle$, sin hacer nada mas.
+
+\begin{figure}[H]
+\begin{center}
+\minipage{0.8\textwidth}
+\includegraphics[width=\linewidth]{ejercicio7/reloj.png}
+\endminipage
+\end{center}
+\end{figure}
+
+
+\item[E]: Creamos la funcion $pantallaDebug()$ la cual guarda la pantalla y luego imprime por pantalla el contenido de todos los registros y parte del stack de la tarea.
+
+
+\item[F]: Realizamos la funcion $continuarJuego()$ la cual se llama si se presiona la tecla $y$ y el juego estaba frendo. Esta función setea $juego_frenado$ en 0, restaura la pantalla previamente guardada por $pantallaDebug$ y elmina la tarea actual. Ahora como el juego ya no esta frenado, se pueden saltar a otras tareas que no sean la $idle$.
+
+\begin{figure}[H]
+\begin{center}
+\minipage{0.8\textwidth}
+\includegraphics[width=\linewidth]{ejercicio7/continuar.png}
+\endminipage
+\end{center}
+\end{figure}
+
+\item[H]: Modificamos la $RAE$ del teclado, para que si el juego esta frenado solo se detecte la tecla y.
+
+\begin{figure}[H]
+\begin{center}
+\minipage{0.8\textwidth}
+\includegraphics[width=\linewidth]{ejercicio7/teclay.png}
+\endminipage
+\end{center}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
 
 

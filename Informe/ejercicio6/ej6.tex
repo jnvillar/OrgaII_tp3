@@ -73,7 +73,7 @@ Lo primero que  hacemos en esta función es pedir una nueva página libre para u
 Lo siguiente es preguntar si es la tarea (el perro) es una tarea correspondiente al \textbf{jugador A} o al \textbf{jugador B}. Para saber donde guardar el descriptor. Para cada perro de ambos jugadores se realiza lo siguiente:
 \begin{itemize}
 
-\item En los campos \textit{cs}, \textit{es}, \textit{gs}, \text{ss}, \textit{ds}, \textit{fs} tienen los segmentos definidos anteriormente en la \textit{GDT}.\\
+\item En los campos \textit{cs}, \textit{es}, \textit{gs}, \text{ss}, \textit{ds}, \textit{fs} tienen los segmentos definidos anteriormente en la \textit{GDT}.
 \item La entrada \textit{esp} tiene 0x0402000-12.
 \item La entrada \textit{eip} tiene 0x00401000.
 \item La entrada \textit{eflags} = 0x202.
@@ -162,7 +162,7 @@ El código es el siguiente:\\
 \end{center}
 \end{figure}
 
-Luego, como el Tp lo pide, es necesario que se salte a la tarea $idle$ por ende cuando se vuelve a la interrupcion 0x46, al final salta a la $idle$ haciendo jmp 0x68:0.
+Notar que la imagen anterior corresponde al código final, en el cual la interrupcion, como el Tp lo pide, salta a la tarea $idle$ ,luego de haber atendido la interrupción, haciendo jmp 0x68:0. Cómo en este punto se pedía que la tarea actual no fuera desalojada, simplemente ignorar el jmp 0x68:0 
 
 \subsection{Ítem h): Probar correr un perro}
 
