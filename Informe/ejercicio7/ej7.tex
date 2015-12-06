@@ -96,8 +96,8 @@ El intercambio de tareas lo realizamos en cada interrupción del reloj, utilizan
     cmp ax,cx \\
     je .fin \\
 
-    mov [sched_tarea_selector], ax \\
-    jmp far:[sched_tarea_offset] \\
+    mov [sched\_tarea\_selector], ax \\
+    jmp far:[sched\_tarea\_offset] \\
 
     .fin: \\
      call screen\_actualizar\_reloj\_global \\    
@@ -117,7 +117,7 @@ Para este ítem realizamos varias cosas:
 
 \begin{itemize}
 
-\item[A]: Creamos dos variables, $juego_frenado$ y $modo_debug$, la primera vale 0 por defecto y pasa a valer 1 cuando el modo debug esta activado y se detecta que un perro causo una falta, sirve para que si esta prendida, la rutina del reloj salte siempre a la tarea $idle$. La segunda simplemente indica si el modo debug esta activado o no, si esta activada el juego se pone en pausa y muestra la pantalla debug cuando un perro rompe el programa, sino, esta pantalla no se muestra y simplemente se elimina el perro.
+\item[A]: Creamos dos variables, $juegoFrenado$ y $modo_debug$, la primera vale 0 por defecto y pasa a valer 1 cuando el modo debug esta activado y se detecta que un perro causo una falta, sirve para que si esta prendida, la rutina del reloj salte siempre a la tarea $idle$. La segunda simplemente indica si el modo debug esta activado o no, si esta activada el juego se pone en pausa y muestra la pantalla debug cuando un perro rompe el programa, sino, esta pantalla no se muestra y simplemente se elimina el perro.
 
 \item[B]: Modificamos la $RAE$ correspondiente a las primeras 20 interrupciones, para que de esta forma, en vez de hacer simplemente jmp \$ salte a la funcion $set_frenado()$.
 
@@ -130,7 +130,7 @@ Para este ítem realizamos varias cosas:
 \end{figure}
 
 
-\item[C]: Creamos la funcion $set_frenado()$ la cual se fija si el modo debug esta activado, si lo esta, pone la variable $juego_frenado$ en 1 e imprime la pantalla debug. Si el modo debug no esta activado simplemente elimina la tarea actual, la cual es la que rompió el juego. De esta manera el juego puede continuar.
+\item[C]: Creamos la funcion $set_frenado()$ la cual se fija si el modo debug esta activado, si lo esta, pone la variable $juegoFrenado$ en 1 e imprime la pantalla debug. Si el modo debug no esta activado simplemente elimina la tarea actual, la cual es la que rompió el juego. De esta manera el juego puede continuar.
 
 \begin{figure}[H]
 \begin{center}
@@ -142,7 +142,7 @@ Para este ítem realizamos varias cosas:
 \end{figure}
 
 
-\item[D]: Modificamos la rutina del reloj para que si la variable $juego_frenado$ esta en 1, salte directamente a la tarea $idle$, sin hacer nada mas.
+\item[D]: Modificamos la rutina del reloj para que si la variable $juegoFrenado$ esta en 1, salte directamente a la tarea $idle$, sin hacer nada mas.
 
 \begin{figure}[H]
 \begin{center}
@@ -156,7 +156,7 @@ Para este ítem realizamos varias cosas:
 \item[E]: Creamos la funcion $pantallaDebug()$ la cual guarda la pantalla y luego imprime por pantalla el contenido de todos los registros y parte del stack de la tarea.
 
 
-\item[F]: Realizamos la funcion $continuarJuego()$ la cual se llama si se presiona la tecla $y$ y el juego estaba frendo. Esta función setea $juego_frenado$ en 0, restaura la pantalla previamente guardada por $pantallaDebug$ y elmina la tarea actual. Ahora como el juego ya no esta frenado, se pueden saltar a otras tareas que no sean la $idle$.
+\item[F]: Realizamos la funcion $continuarJuego()$ la cual se llama si se presiona la tecla $y$ y el juego estaba frendo. Esta función setea $juegoFrenado$ en 0, restaura la pantalla previamente guardada por $pantallaDebug$ y elmina la tarea actual. Ahora como el juego ya no esta frenado, se pueden saltar a otras tareas que no sean la $idle$.
 
 \begin{figure}[H]
 \begin{center}
