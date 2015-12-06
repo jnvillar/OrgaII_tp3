@@ -24,7 +24,7 @@ En este ejercicio trabajaremos con todo lo relacionado a la \textit{TSS}, realiz
 
 \end{itemize}
 
-\subsection{Item a) Definir entradas de la \textit{GDT} necesarias}
+\subsection{Ítem a): Definir entradas de la \textit{GDT} necesarias}
 Para este punto definimos 18 nuevas entradas en la \textit{GDT}.\\
 
 Las primeras dos nuevas entradas de la \textit{GDT} corresponden a la \textit{Tarea inicial} y a la tarea \textit{idle} respectivamente. 
@@ -51,7 +51,7 @@ Las siguientes 8 entradas corresponden a los 8 perros del \textbf{jugador A} ord
 \end{figure}
 
 
-\subsection{Item b)}
+\subsection{Ítem b): Completar la $TSS$ de la tarea $idle$ y de la $tarea inicial$}
 Para este item hacemos lo siguiente, primero completamos el campo \textit{base} de la entrada de la \textit{GDT} correspondiente a la tarea \textit{idle}.Para ello le asignamos la dirección 0x00016000 tal como indica el enunciado.\\
 Como también nos dicen que comparte el \textit{esp} con el \textit{kernel} entonces en la entrada \textit{esp} de la \textit{TSS} le asignamos 0x27000 que era el \textit{esp} asignado al kernel.Además como comparten el \textit{cr3} le asigno a la entrada correspondiente en la \textit{TSS} 0x28000.\\% por qué? ni idea
 La siguiente imagen muestra como queda completo el descriptor de la \textit{TSS}\\
@@ -67,19 +67,19 @@ La siguiente imagen muestra como queda completo el descriptor de la \textit{TSS}
 
 
 
-\subsection{item c)}
+\subsection{Ítem c): Realizar la función $tss\_completar(int$ $jugador, int$ $perro, perro\_t *perro)$}
 Lo que nos piden en este punto es hacer la función $void$ $tss\_completar(int$ $jugador, int$ $perro, perro\_t *perro)$\\
 Lo primero que  hacemos en esta función es pedir una nueva página libre para usarla como una pila de nivel 0 para la tarea.\\
 Lo siguiente es preguntar si es la tarea (el perro) es una tarea correspondiente al \textbf{jugador A} o al \textbf{jugador B}. Para saber donde guardar el descriptor. Para cada perro de ambos jugadores se realiza lo siguiente:
 \begin{itemize}
 
 \item En los campos \textit{cs}, \textit{es}, \textit{gs}, \text{ss}, \textit{ds}, \textit{fs} tienen los segmentos definidos anteriormente en la \textit{GDT}.\\
-\item La entrada \textit{esp} tiene 0x0402000-12.\\
-\item La entrada \textit{eip} tiene 0x00401000.\\
-\item La entrada \textit{eflags} = 0x202.\\
-\item La entrada \textit{esp0} = Es la posicion de la página libre pedida mas 4kb pues tiene apilado en la pila los argumentos.\\
-\item La entrada \textit{iomap} = 0xFFFF.\\
-\item La entrada \textit{ss0} = 0x48.\\
+\item La entrada \textit{esp} tiene 0x0402000-12.
+\item La entrada \textit{eip} tiene 0x00401000.
+\item La entrada \textit{eflags} = 0x202.
+\item La entrada \textit{esp0} = Es la posicion de la página libre pedida mas 4kb pues tiene apilado en la pila los argumentos.
+\item La entrada \textit{iomap} = 0xFFFF.
+\item La entrada \textit{ss0} = 0x48.
 \item El nuevo \textit{cr3} va a ser el devuelto por la función \textit{mmu\_inicializar\_memoria\_perro}. Asignamos el \textit{cr3}  al campo correspondiente y actualizamos la entrada correspondiente a la \textit{GDT} para esa tarea seteando los campos base e índice.
 \end{itemize}
 
@@ -95,7 +95,7 @@ La siguiente imágen muestra dicho proceso.\\
 \end{figure}
 
 
-\subsection{item d)}
+\subsection{Ítem d): Completar la entrada de la $tarea\_inicial$ en la $GDT$}
 
 La entrada de la \textit{GDT} correspondiente a la tarea inicial en principio la definimos con cualquier valor  en la base pero con los valores correspondientes en los demás campos.
 
@@ -109,7 +109,7 @@ La entrada de la \textit{GDT} correspondiente a la tarea inicial en principio la
 \end{figure}
 
 
-Luego con la función ºtextit{tss\_inicializar()} le asignamos la base correspondiente.
+Luego con la función \textit{tss\_inicializar()} le asignamos la base correspondiente.
 
 \begin{figure}[H]
 \begin{center}
@@ -120,7 +120,7 @@ Luego con la función ºtextit{tss\_inicializar()} le asignamos la base correspo
 \end{center}
 \end{figure}
 
-\subsection{item e)}
+\subsection{Ítem e): Completar la entrada de la $idle$ en la $GDT$}
 Esta sección es similar a la anterior. Creamos una entrada en la \textit{GDT} para esta tarea y en la función \textit{tss\_inicializar()} seteamos los valores correspondientes para su base en la \textit{GDT} y también seteamos su TSS.\\
 Como nos dicen que la tarea se encuentra en la dirección 0x00010000 ese es el valor que ponemos en la base y por el enunciado va a compartir el CR3. Lo mismo con su pila.\\
 
@@ -133,18 +133,24 @@ Como nos dicen que la tarea se encuentra en la dirección 0x00010000 ese es el v
 \end{center}
 \end{figure}
 
-\subsection{item f)}
-Esto es simplemente hacer un jump far en el archivo kernel.asm.\\
-El intercambio en los valores de la TSS lo hace automáticamente el procesador. Agregamos al archivo \textit{kernel.asm} la siguiente linea\\
- $jmp$ 0x68:0
+\subsection{Ítem f): Saltar a la tarea Idle}
+Esto es simplemente hacer un jump far en el archivo kernel.asm. Como el intercambio en los valores de la TSS lo hace automáticamente el procesador simplemente agregamos al archivo \textit{kernel.asm} la siguiente linea\\
+ \begin{center}
+ $jmp$ 0x68:0 \\
+ \end{center}
 
- \subsection{item g)}
-Para este punto lo que hacemos en la interrupción 0x46 es pushear en la pila los parametros de la interrupcion que llegan en los registros $EAX$ y $ECX$ y llamar a la función $game\_syscall\_manejar(uint syscall, uint param1)$ \\
-Y lo que hace la función es, dependiendo de los parámetros que le llega, llama a la función correspondiente las cuales pueden ser\\
-$game\_perro\_mover(tarea actual, parametro 1 de la interrupcion)$,\\
-$game\_perro\_cavar(tarea actual)$ \\
-$game\_perro\_olfatear(tarea actual)$\\
-$game\_perro\_recibirorden(tarea actual$).\\
+ \subsection{Ítem g): Completar la iterrución 0x46 de acuerdo al punto 4.4 del enunciado}
+Para este punto lo que hacemos en la interrupción 0x46 es pushear en la pila los parametros de la interrupcion que llegan en los registros $EAX$ y $ECX$ y llamar a la función $game\_syscall\_manejar(uint syscall, uint param1)$. Lo que hace la función es, dependiendo de los parámetros que le llega, llamar a la función correspondiente para atender la interrupción las cuales pueden ser:\\
+
+\begin{itemize}
+
+\item $game\_perro\_mover(tarea actual, parametro 1 de la interrupcion)$.
+\item $game\_perro\_cavar(tarea actual)$.
+\item $game\_perro\_olfatear(tarea actual)$.
+\item $game\_perro\_recibirorden(tarea actual$).
+
+\end{itemize}
+
 El código es el siguiente:\\
 
 \begin{figure}[H]
@@ -158,7 +164,7 @@ El código es el siguiente:\\
 
 Luego, como el Tp lo pide, es necesario que se salte a la tarea $idle$ por ende cuando se vuelve a la interrupcion 0x46, al final salta a la $idle$ haciendo jmp 0x68:0.
 
-\subsection{item h)}
+\subsection{Ítem h): Probar correr un perro}
 
-Este itém lo testiamos y todo anduvo bien, como no va a estar en el tp final borramos el código que lo implementaba, pero fue testiado.
+Este itém lo testeamos y todo anduvo bien, como no va a estar en el tp final borramos el código que lo implementaba, pero fue testeado.
 
